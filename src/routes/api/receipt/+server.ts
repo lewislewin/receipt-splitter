@@ -69,7 +69,7 @@ percentage: If the modifier is a percentage of the total order, include the perc
 Items:
 Each item should include:
 item: The item's name, accurately extracted even if split across multiple lines.
-price: The price per unit of the item. If the price is for multiple units, divide the total price by the quantity to calculate the per-item price.
+price: The price per unit of the item. If the price is for multiple units, divide the total price by the quantity to calculate the per-item price. This should not include the currency, just the value.
 qty: The quantity of the item. Ensure the correct quantity, even if quantities are specified on separate lines or implied by additional notes like "x2" or "double."
 Handle cases where:
 The price is listed per line (inclusive or exclusive of totals).

@@ -45,7 +45,6 @@
       </button>
     </div>
   </div>
-
   <!-- Display Receipt if parsed -->
   {#if parsedReceipt}
     <div class="mt-6 w-full max-w-md">
