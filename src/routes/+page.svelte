@@ -25,9 +25,15 @@
     const responseJson: ApiResponse = await res.json();
     parsedReceipt = responseJson.receipt;
   };
+
+  function clearReceipt() {
+    parsedReceipt = null;
+  }
 </script>
 
+
 <div class="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+  {#if !parsedReceipt}
   <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
     <h1 class="text-2xl font-bold mb-4 text-center">Upload a Receipt</h1>
     <div class="flex flex-col gap-4">
@@ -38,17 +44,26 @@
         class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
       />
       <button
-        on:click={uploadReceipt}
+        onclick={uploadReceipt}
         class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors"
       >
         Parse Receipt
       </button>
+      
     </div>
   </div>
+  {/if}
+  <button
+        onclick={clearReceipt}
+        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+      >
+        Clear Receipt
+      </button>
   <!-- Display Receipt if parsed -->
   {#if parsedReceipt}
     <div class="mt-6 w-full max-w-md">
       <Receipt receipt={parsedReceipt}/>
     </div>
   {/if}
+  
 </div>
