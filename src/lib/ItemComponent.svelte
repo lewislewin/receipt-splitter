@@ -23,9 +23,7 @@
 
   <!-- Quantity controls -->
   <div class="flex items-center space-x-2">
-    <button onclick={() => updateField('qty', Math.max(item.qty - 1, 0))} class="p-1 bg-gray-200 rounded">-</button>
     <span>{item.qty}</span>
-    <button onclick={() => updateField('qty', item.qty + 1)} class="p-1 bg-gray-200 rounded">+</button>
   </div>
 
   <!-- Editable price -->
