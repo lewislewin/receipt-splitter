@@ -6,22 +6,23 @@
 
   const clearReceipt = () => (parsedReceipt = null);
 
-  async function generateReceiptLink() {
-    let result = await fetch('api/receipts', { method: 'POST', body: JSON.stringify(parsedReceipt) })
-    console.log(result)
-  }
+  const updateReceipt = (updatedReceipt: ParsedReceipt) => {
+    parsedReceipt = updatedReceipt;
+  };
 </script>
 
 <div class="w-full max-w-md">
   {#if parsedReceipt}
-    <Receipt receipt={parsedReceipt} />
+    <Receipt
+      receipt={parsedReceipt}
+      on:update={(e) => updateReceipt(e.detail)}
+    />
     <div class="flex justify-between mt-4">
       <button on:click={clearReceipt} class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
         Clear Receipt
       </button>
-      <button on:click={generateReceiptLink} class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
-        Generate Link
-      </button>
     </div>
+  {:else}
+    <p class="text-gray-500 text-center">No receipt loaded.</p>
   {/if}
 </div>

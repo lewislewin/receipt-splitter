@@ -10,7 +10,32 @@
     receipt: ParsedReceipt;
   }
 
-  const uploadReceipt = async () => {
+  // Generate a receipt link by sending it to the server
+  async function generateReceiptLink() {
+    try {
+      if (!parsedReceipt) {
+        console.error('No receipt to generate a link for');
+        return;
+      }
+
+      const response = await fetch('/api/receipts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(parsedReceipt),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to generate link: ${response.statusText}`);
+      }
+
+      const id: number = await response.json();
+      console.log('Receipt link generated:', id);
+    } catch (error) {
+      console.error('Error generating receipt link:', error);
+    }
+  }
+
+  const parseReceipt = async () => {
     if (!receiptInput || !receiptInput.files || receiptInput.files.length === 0) {
       alert('Please select a receipt image!');
       return;
@@ -48,12 +73,13 @@
           class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
         />
         <button
-          on:click={uploadReceipt}
+          on:click={parseReceipt}
           aria-label="Upload Receipt"
           class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors"
         >
           Parse Receipt
         </button>
+        
       </div>
     </div>
   {/if}
@@ -61,5 +87,12 @@
   <!-- Parsed Receipt -->
   {#if parsedReceipt}
     <ReceiptWrapper {parsedReceipt} />
+    <button
+        on:click={generateReceiptLink}
+        aria-label="Upload Receipt"
+        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+      >
+        Generate Link
+      </button>
   {/if}
 </div>

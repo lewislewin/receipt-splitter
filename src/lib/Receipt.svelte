@@ -2,24 +2,42 @@
   import type { Modifier, ParsedReceipt, ReceiptItem } from '$lib/types';
   import ItemComponent from '$lib/ItemComponent.svelte';
   import ModifierComponent from '$lib/ModifierComponent.svelte';
+  import { createEventDispatcher } from 'svelte';
 
   export let receipt: ParsedReceipt;
+  const dispatch = createEventDispatcher();
 
   const updateItem = (index: number, updatedItem: ReceiptItem) => {
-    receipt.items[index] = updatedItem;
-    receipt = { ...receipt }; // Trigger reactivity
+    const updatedItems = [...receipt.items];
+    updatedItems[index] = updatedItem;
+    dispatch('update', { ...receipt, items: updatedItems });
   };
 
   const updateModifier = (index: number, updatedModifier: Modifier) => {
-    receipt.modifiers[index] = updatedModifier;
-    receipt = { ...receipt }; // Trigger reactivity
+    const updatedModifiers = [...receipt.modifiers];
+    updatedModifiers[index] = updatedModifier;
+    dispatch('update', { ...receipt, modifiers: updatedModifiers });
   };
 
-  const addItem = () => receipt.items.push({ item: '', qty: 1, price: 0 });
-  const removeItem = (index: number) => receipt.items.splice(index, 1);
+  const addItem = () => {
+    const updatedItems = [...receipt.items, { item: '', qty: 1, price: 0 }];
+    dispatch('update', { ...receipt, items: updatedItems });
+  };
 
-  const addModifier = () => receipt.modifiers.push({ type: '', percentage: 0, value: 0 });
-  const removeModifier = (index: number) => receipt.modifiers.splice(index, 1);
+  const removeItem = (index: number) => {
+    const updatedItems = receipt.items.filter((_, i) => i !== index);
+    dispatch('update', { ...receipt, items: updatedItems });
+  };
+
+  const addModifier = () => {
+    const updatedModifiers = [...receipt.modifiers, { type: '', percentage: 0, value: 0 }];
+    dispatch('update', { ...receipt, modifiers: updatedModifiers });
+  };
+
+  const removeModifier = (index: number) => {
+    const updatedModifiers = receipt.modifiers.filter((_, i) => i !== index);
+    dispatch('update', { ...receipt, modifiers: updatedModifiers });
+  };
 </script>
 
 <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
