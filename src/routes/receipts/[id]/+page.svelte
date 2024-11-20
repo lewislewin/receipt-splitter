@@ -24,22 +24,26 @@
   };
 </script>
 
-<div class="min-h-screen flex flex-col items-center bg-gray-100 p-6">
+<div class="min-h-screen flex flex-col items-center bg-gray-100 p-8 md:p-12">
   <!-- Loading or fallback state -->
   {#if data?.receipt}
     <!-- Page Title -->
-    <h1 class="text-3xl font-bold mb-6">{data.receipt.name}</h1>
+    <div class="w-full max-w-5xl bg-white p-8 rounded-lg shadow-lg">
+      <h1 class="text-4xl font-bold mb-8 text-center">{data.receipt.name}</h1>
 
-    <!-- Receipt Wrapper -->
-    <div class="w-full max-w-3xl">
-      <ReceiptWrapper
-        parsedReceipt={data.receipt}
-      />
+      <!-- Receipt Wrapper -->
+      <div class="w-full max-w-4xl mx-auto">
+        <ReceiptWrapper
+          parsedReceipt={data.receipt}
+        />
+      </div>
+
+      <!-- Total -->
+      <div class="mt-8 text-center">
+        <p class="text-xl font-bold">Total: £{calculateTotal()}</p>
+      </div>
     </div>
-
-    <!-- Total -->
-    <p class="text-lg font-bold mt-4">Total: £{calculateTotal()}</p>
   {:else}
-    <p class="text-gray-500 text-center">Loading receipt...</p>
+    <p class="text-gray-500 text-center text-lg">Loading receipt...</p>
   {/if}
 </div>
