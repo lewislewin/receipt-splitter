@@ -1,9 +1,8 @@
 <script lang="ts">
-  import ItemsTable from '$lib/ItemsTable.svelte';
+  import ItemsTable from './ItemsTable.svelte';
   import type { ReceiptItem, ParsedReceipt } from '$lib/types';
 
   export let receipt: ParsedReceipt;
-  let items = receipt.items
 
   const updateItem = (index: number, updatedItem: ReceiptItem) => {
     const updatedItems = [...receipt.items];
@@ -31,7 +30,7 @@
   <div class="mb-10">
     <h3 class="mb-6 text-center text-2xl font-semibold text-gray-700">Items</h3>
     <ItemsTable
-      {items}
+      items={receipt.items}
       onItemUpdate={updateItem}
       onItemRemove={removeItem}
     />

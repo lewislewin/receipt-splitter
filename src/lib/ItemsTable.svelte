@@ -1,10 +1,8 @@
 <script lang="ts">
-    import ItemActions from '$lib/ItemActions.svelte';
+    import ItemActions from './ItemActions.svelte';
     import type { ReceiptItem } from '$lib/types';
   
-    export let items: ReceiptItem[] = [];
-    export let onItemUpdate: (index: number, updatedItem: ReceiptItem) => void;
-    export let onItemRemove: (index: number) => void;
+    let { items, onItemUpdate, onItemRemove } = $props();
   
     const calculateRowTotal = (item: ReceiptItem) => (item.qty * (item.price ?? 0)).toFixed(2);
   </script>
@@ -33,7 +31,7 @@
                 type="text"
                 value={item.item}
                 class="border rounded p-1 w-full"
-                on:input={(e) => onItemUpdate(index, { ...item, item: e.target.value })}
+                oninput={(e) => onItemUpdate(index, { ...item, item: e.target.value })}
               />
             </td>
   
@@ -44,7 +42,7 @@
                 step="0.01"
                 value={(item.price ?? 0).toFixed(2)}
                 class="border rounded p-1 w-full"
-                on:input={(e) =>
+                oninput={(e) =>
                   onItemUpdate(index, { ...item, price: parseFloat(e.target.value) || 0 })
                 }
               />
@@ -54,8 +52,8 @@
             <td class="px-4 py-2 text-center">
               <ItemActions
                 {item}
-                on:update={(e) => onItemUpdate(index, e.detail)}
-                on:remove={() => onItemRemove(index)}
+                update={(updatedValue: ReceiptItem) => onItemUpdate(index, updatedValue)}
+                remove={() => onItemRemove(index)} 
               />
             </td>
           </tr>

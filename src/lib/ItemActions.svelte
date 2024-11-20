@@ -1,42 +1,39 @@
 <script lang="ts">
-    import { createEventDispatcher } from 'svelte';
     import type { ReceiptItem } from '$lib/types';
   
-    export let item: ReceiptItem;
-  
-    const dispatch = createEventDispatcher();
+    let { update, remove, item } = $props();
   
     const incrementQty = () => {
       const updatedItem = { ...item, qty: item.qty + 1 };
-      dispatch('update', updatedItem);
+      update(updatedItem);
     };
   
     const decrementQty = () => {
       const updatedItem = { ...item, qty: Math.max(item.qty - 1, 0) };
-      dispatch('update', updatedItem);
+      update(updatedItem);
     };
   
-    const removeItem = () => {
-      dispatch('remove', item);
+    const handleRemove = () => {
+      remove(); // Invoke the `remove` function passed as a prop
     };
   </script>
   
   <div class="flex items-center space-x-4">
     <button
-      on:click={decrementQty}
+      onclick={decrementQty}
       class="w-10 h-10 bg-gray-200 rounded hover:bg-gray-300 text-lg font-bold"
     >
       -
     </button>
     <span class="text-lg font-semibold">{item.qty}</span>
     <button
-      on:click={incrementQty}
+      onclick={incrementQty}
       class="w-10 h-10 bg-gray-200 rounded hover:bg-gray-300 text-lg font-bold"
     >
       +
     </button>
     <button
-      on:click={removeItem}
+      onclick={handleRemove}
       class="w-24 bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 font-bold"
     >
       Remove
