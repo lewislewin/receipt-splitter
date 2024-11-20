@@ -1,13 +1,13 @@
 export interface ReceiptItem {
     item: string
-    price: number
+    price: number | null
     qty: number
   }
   
 export interface Modifier {
     type: string
-    value: number
-    percentage: number
+    value: number | null
+    percentage: number | null
 }
 
 export interface ParsedReceipt {
