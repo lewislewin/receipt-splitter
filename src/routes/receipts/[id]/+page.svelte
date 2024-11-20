@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type { Receipt } from '$lib/types';
+    import type { ParsedReceipt } from '$lib/types';
   
-    export let data: Receipt;
+    export let data: ParsedReceipt;
   
     let total: number = 0;
   

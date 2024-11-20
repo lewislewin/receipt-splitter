@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import type { Receipt } from '$lib/types';
+import type { ParsedReceipt } from '$lib/types';
 import type { KVNamespace } from '@cloudflare/workers-types';
 
 // Cloudflare KV binding
@@ -14,6 +14,6 @@ export const GET = async ({ params }: { params: { id: string } }) => {
     return json({ error: 'Receipt not found' }, { status: 404 });
   }
 
-  const receipt: Receipt = JSON.parse(receiptData);
+  const receipt: ParsedReceipt = JSON.parse(receiptData);
   return json(receipt);
 };

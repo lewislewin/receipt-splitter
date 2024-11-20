@@ -1,18 +1,21 @@
 import { json } from '@sveltejs/kit';
-import { v4 as uuidv4 } from 'uuid';
 import sharp from 'sharp';
-import type { Receipt } from '$lib/types';
-import type { KVNamespace } from '@cloudflare/workers-types';
-import { OpenAI } from "openai";
+import { OpenAI } from 'openai';
+import vision from '@google-cloud/vision';
+import type { ParsedReceipt } from '$lib/types';
+import { env } from '$env/dynamic/private'
 
+// Initialize OpenAI
 const openAi = new OpenAI({
-  organization: 'xx',
-  project: 'xx',
-  apiKey: 'xx'
+  organization: env.SECRET_OPENAPI_ORG_ID,
+  project: env.SECRET_OPENAPI_PROJECT_ID,
+  apiKey: env.SECRET_OPENAPI_API_KEY,
 });
 
-// Cloudflare KV binding
-declare const RECEIPTS: KVNamespace;
+// Initialize Google Vision Client
+const visionClient = new vision.ImageAnnotatorClient({
+  keyFilename: env.SECRET_GOOGLE_APPLICATION_CREDENTIALS,
+});
 
 export const POST = async ({ request }: { request: Request }) => {
   const data = await request.formData();
@@ -31,50 +34,73 @@ export const POST = async ({ request }: { request: Request }) => {
       .jpeg({ quality: 50 })
       .toBuffer();
 
-    // Convert to base64
-    const base64Image = optimizedImage.toString('base64');
+    // Use Google Vision API to perform OCR
+    const [result] = await visionClient.textDetection(optimizedImage);
+    const text = result.fullTextAnnotation?.text || '';
 
-    // GPT-4 processing
+    if (!text) {
+      throw new Error('OCR failed: No text detected in the receipt.');
+    }
+
+    // Use GPT to parse the OCR result into structured JSON
     const gptResponse = await openAi.chat.completions.create({
-      model: 'chatgpt-4o-latest',
+      model: 'gpt-4',
       messages: [
         {
           role: 'system',
-          content:
-            'You are a receipt parsing assistant. Analyze the provided receipt image (base64-encoded) and return a structured JSON object in this format: {"name":"Store Name", "service_charge":ServiceCharge / Tip as a percentage of the whole order} "items":[{"item":"Item Name", "price":Price, "qty":Quantity]. Pay attention to the format of the receipt and the lines, and correctly distribute the quantity. For example, a item could be split across two lines or have additions or subtractions as a sub undeneath the line. the price should be the price per item so if that needs to be divided by the quantity, do so.',
+          content: `You are a highly intelligent receipt parsing assistant. Your task is to analyze the provided receipt text and return a structured JSON object with the following format:
+{
+  "name": "Store Name",
+  "modifiers": [
+    {"type": "Modifier Type", "value": Value, "percentage": PercentageOfOrder (if applicable)}
+  ],
+  "items": [
+    {"item": "Item Name", "price": PricePerItem, "qty": Quantity}
+  ]
+}
+Important Considerations:
+Store Name:
+Extract the store's name from the receipt header or footer, wherever applicable.
+Modifiers:
+Include all price-related adjustments as separate entries in the modifiers array. Each modifier should include:
+type: The name of the modifier (e.g., "Service Charge", "Discount").
+value: The absolute value of the modifier (e.g., £10.00 for a discount or service charge).
+percentage: If the modifier is a percentage of the total order, include the percentage. If not, set this field to null.
+Items:
+Each item should include:
+item: The item's name, accurately extracted even if split across multiple lines.
+price: The price per unit of the item. If the price is for multiple units, divide the total price by the quantity to calculate the per-item price.
+qty: The quantity of the item. Ensure the correct quantity, even if quantities are specified on separate lines or implied by additional notes like "x2" or "double."
+Handle cases where:
+The price is listed per line (inclusive or exclusive of totals).
+Adjustments (e.g., additions, subtractions, or discounts) are listed on sublines or as notes.
+Format Adaptation:
+Some receipts might have irregular formats, such as handwritten-style totals, unclear item groupings, or totals including service charges. Adapt accordingly and infer missing information where possible.
+Tax:
+If tax is explicitly mentioned, include it as a modifier in the modifiers array with type: "Tax". Specify the tax value and its percentage of the total (if applicable).
+Error Handling:
+If any field cannot be confidently extracted, provide a null value for that field in the JSON and note the reason in a separate "notes" field.`,
         },
         {
           role: 'user',
-          content: [
-            {
-              type: 'text',
-              text: 'Convert this receipt to json. ONLY PROVIDE THE JSON, NOTHING ELSE',
-            },
-            {
-              type: 'image_url',
-              image_url: {
-                url: `data:image/jpeg;base64,${base64Image}`,
-              },
-            },
-          ],
+          content: `Here is the extracted text from a receipt, ONLY PROVIDE ME THE JSON OBJECT NOTHING ELSE:\n\n${text}`,
         },
       ],
     });
-    console.log(gptResponse);
-    console.log(gptResponse.choices[0].message);
-    // Clean and parse the structured JSON from GPT response
+
+    // Parse GPT response into structured JSON
     const rawContent = gptResponse.choices[0]?.message?.content || '';
     const cleanedContent = rawContent.replace(/^```json\s*/, '').replace(/```$/, '');
-    const structuredReceipt: Receipt = JSON.parse(cleanedContent);
+    const structuredReceipt: ParsedReceipt = JSON.parse(cleanedContent);
+    console.log(structuredReceipt)
 
     // Store in Cloudflare KV
-    const receiptId = uuidv4();
-    console.log(JSON.stringify(structuredReceipt));
-    await RECEIPTS.put(receiptId, JSON.stringify(structuredReceipt));
+    // const receiptId = uuidv4();
+    // await RECEIPTS.put(receiptId, JSON.stringify(structuredReceipt));
 
-    return json({ id: receiptId });
+    return json({ receipt: structuredReceipt });
   } catch (error) {
-    console.error("Error processing receipt:", error);
-    return json({ error: "Failed to process the receipt" }, { status: 500 });
+    console.error('Error processing receipt:', error);
+    return json({ error: 'Failed to process the receipt' }, { status: 500 });
   }
 };

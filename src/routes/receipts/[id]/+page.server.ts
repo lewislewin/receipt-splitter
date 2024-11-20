@@ -1,4 +1,4 @@
-import type { Receipt } from '$lib/types';
+import type { ParsedReceipt } from '$lib/types';
 import type { KVNamespace } from '@cloudflare/workers-types';
 
 // Cloudflare KV binding
@@ -13,6 +13,6 @@ export const load = async ({ params }: { params: { id: string } }) => {
     throw new Error('Receipt not found');
   }
 
-  const receipt: Receipt = JSON.parse(receiptData);
+  const receipt: ParsedReceipt = JSON.parse(receiptData);
   return receipt;
 };
