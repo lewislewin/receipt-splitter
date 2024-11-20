@@ -73,7 +73,7 @@
 		<ul class="space-y-2">
 			{#each receipt.modifiers as modifier, index}
 				<li class="flex items-center space-x-4">
-					<ModifierComponent {modifier} on:update={(e) => updateModifier(index, e.detail)} />
+					<ModifierComponent {modifier} update={(updatedValue: ReceiptItem) => updateItem(index, updatedValue)} />
 					<button
 						on:click={() => removeModifier(index)}
 						class="font-bold text-red-500 hover:text-red-700"
