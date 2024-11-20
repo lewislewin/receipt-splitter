@@ -13,18 +13,21 @@
     <table class="table-auto w-full text-left border-collapse">
       <thead>
         <tr class="bg-gray-200 text-gray-600 uppercase text-sm">
-          <th class="px-4 py-2">Line Price</th>
+          <th class="px-4 py-2 text-right">Line Price</th>
           <th class="px-4 py-2">Item Name</th>
-          <th class="px-4 py-2">Individual Price</th>
+          <th class="px-4 py-2 text-right">Individual Price</th>
           <th class="px-4 py-2 text-center">Actions</th>
         </tr>
       </thead>
       <tbody>
         {#each items as item, index}
           <tr class="border-t">
+            <!-- Line Price -->
             <td class="px-4 py-2 text-right font-semibold">
               £{calculateRowTotal(item)}
             </td>
+  
+            <!-- Item Name -->
             <td class="px-4 py-2">
               <input
                 type="text"
@@ -33,7 +36,9 @@
                 on:input={(e) => onItemUpdate(index, { ...item, item: e.target.value })}
               />
             </td>
-            <td class="px-4 py-2">
+  
+            <!-- Individual Price -->
+            <td class="px-4 py-2 text-right">
               <input
                 type="number"
                 step="0.01"
@@ -44,6 +49,8 @@
                 }
               />
             </td>
+  
+            <!-- Actions -->
             <td class="px-4 py-2 text-center">
               <ItemActions
                 {item}

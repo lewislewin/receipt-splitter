@@ -1,18 +1,19 @@
 <script lang="ts">
-  import ItemsTable from './ItemsTable.svelte';
+  import ItemsTable from '$lib/ItemsTable.svelte';
   import type { ReceiptItem, ParsedReceipt } from '$lib/types';
 
-  export let receipt: ParsedReceipt
+  export let receipt: ParsedReceipt;
   let items = receipt.items
+
   const updateItem = (index: number, updatedItem: ReceiptItem) => {
-    const updatedItems = [...receipt.items]
-    updatedItems[index] = updatedItem
-    receipt = { ...receipt, items: updatedItems }
+    const updatedItems = [...receipt.items];
+    updatedItems[index] = updatedItem;
+    receipt = { ...receipt, items: updatedItems };
   };
 
   const removeItem = (index: number) => {
-    const updatedItems = receipt.items.filter((_, i) => i !== index)
-    receipt = { ...receipt, items: updatedItems }
+    const updatedItems = receipt.items.filter((_, i) => i !== index);
+    receipt = { ...receipt, items: updatedItems };
   };
 
   const addItem = () => {

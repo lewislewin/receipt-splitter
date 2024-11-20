@@ -7,11 +7,13 @@
     const dispatch = createEventDispatcher();
   
     const incrementQty = () => {
-      dispatch('update', { ...item, qty: item.qty + 1 });
+      const updatedItem = { ...item, qty: item.qty + 1 };
+      dispatch('update', updatedItem);
     };
   
     const decrementQty = () => {
-      dispatch('update', { ...item, qty: Math.max(item.qty - 1, 0) });
+      const updatedItem = { ...item, qty: Math.max(item.qty - 1, 0) };
+      dispatch('update', updatedItem);
     };
   
     const removeItem = () => {
