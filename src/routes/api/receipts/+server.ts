@@ -12,6 +12,8 @@ export const POST = async ({ request }: { request: Request }) => {
     const receiptId = uuidv4();
     await kv.put(receiptId, JSON.stringify(data));
 
+    console.log(await kv.get(receiptId))
+
     return json({ id: receiptId });
   } catch (error: unknown) {
     return json({ error: error.message }, { status: 500 });

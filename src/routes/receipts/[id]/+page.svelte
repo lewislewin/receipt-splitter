@@ -3,6 +3,9 @@
   import type { ParsedReceipt } from '$lib/types';
 
   export let data: { receipt: ParsedReceipt };
+
+  console.log('Data received in page:', data);
+
   
   let total: number = 0;
 
@@ -34,3 +37,4 @@
   <!-- Display the Total -->
   <p class="text-lg font-bold mt-4">Total: £{calculateTotal()}</p>
 </div>
+ 

@@ -7,7 +7,7 @@
   const clearReceipt = () => (parsedReceipt = null);
 
   async function generateReceiptLink() {
-    let result = await fetch('api/receipt/create', { method: 'POST', body: JSON.stringify(parsedReceipt) })
+    let result = await fetch('api/receipts', { method: 'POST', body: JSON.stringify(parsedReceipt) })
     console.log(result)
   }
 </script>
