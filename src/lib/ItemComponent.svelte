@@ -22,19 +22,47 @@
         item.item = (e.target as HTMLInputElement).value;
         dispatch('update', item);
     };
+
+    const updatePrice = (e: Event) => {
+        const newValue = parseFloat((e.target as HTMLInputElement).value);
+        if (!isNaN(newValue)) {
+            item.price = newValue;
+            dispatch('update', item);
+        }
+    };
+
+    const calculateRowTotal = () => {
+        return (item.qty * (item.price ?? 0)).toFixed(2);
+    };
 </script>
 
-<li class="grid grid-cols-3 items-center">
+<li class="grid grid-cols-5 items-center gap-2">
+    <!-- Editable item name -->
     <input 
         type="text" 
         class="border p-1 rounded w-full"
         bind:value={item.item} 
         on:input={updateName} 
     />
+    
+    <!-- Quantity controls -->
     <div class="flex items-center space-x-2">
         <button on:click={decreaseQty} class="p-1 bg-gray-200 rounded">-</button>
         <span>{item.qty}</span>
         <button on:click={increaseQty} class="p-1 bg-gray-200 rounded">+</button>
     </div>
-    <div>£{item.price != null ? item.price.toFixed(2) : '0.00'}</div>
+    
+    <!-- Editable price -->
+    <input 
+        type="number" 
+        step="0.01"
+        class="border p-1 rounded w-full"
+        value={(item.price ?? 0).toFixed(2)} 
+        on:input={updatePrice} 
+    />
+    
+    <!-- Row total -->
+    <div class="text-right font-semibold">
+        £{calculateRowTotal()}
+    </div>
 </li>
