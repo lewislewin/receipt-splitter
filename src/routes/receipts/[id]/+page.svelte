@@ -3,7 +3,7 @@
   import type { ParsedReceipt } from '$lib/types';
 
   export let data: { receipt: ParsedReceipt };
-
+  
   let total: number = 0;
 
   // Calculate the total whenever items in the receipt change

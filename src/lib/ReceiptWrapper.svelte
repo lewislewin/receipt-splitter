@@ -1,41 +1,27 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-    import Receipt from '$lib/Receipt.svelte';
-    import type { ParsedReceipt } from '$lib/types';
-  
-    export let parsedReceipt: ParsedReceipt | null = null;
-  
-    const clearReceipt = () => {
-      parsedReceipt = null;
-    };
+  import Receipt from './Receipt.svelte';
+  import type { ParsedReceipt } from '$lib/types';
 
-    function generateLink() {
+  export let parsedReceipt: ParsedReceipt | null = null;
 
-        goto('/receipts/' + 1)
-    }
-  </script>
-  
-  <div class="w-full max-w-md">
-    <!-- Display Receipt -->
-    {#if parsedReceipt}
-      <Receipt receipt={parsedReceipt} />
-    {/if}
+  const clearReceipt = () => (parsedReceipt = null);
 
-    <div class="flex justify-end mb-4">
-        <button
-          onclick={generateLink}
-          aria-label="Clear Receipt"
-          class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors"
-        >
-          Generate Link
-        </button>
-        <button
-          onclick={clearReceipt}
-          aria-label="Clear Receipt"
-          class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition-colors"
-        >
-          Clear Receipt
-        </button>
-      </div>
-  </div>
-  
+  async function generateReceiptLink() {
+    let result = await fetch('api/receipt/create', { method: 'POST', body: JSON.stringify(parsedReceipt) })
+    console.log(result)
+  }
+</script>
+
+<div class="w-full max-w-md">
+  {#if parsedReceipt}
+    <Receipt receipt={parsedReceipt} />
+    <div class="flex justify-between mt-4">
+      <button on:click={clearReceipt} class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+        Clear Receipt
+      </button>
+      <button on:click={generateReceiptLink} class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+        Generate Link
+      </button>
+    </div>
+  {/if}
+</div>
