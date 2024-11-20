@@ -21,7 +21,7 @@
       const formData = new FormData();
       formData.append('receipt', receiptImage);
 
-      const res = await fetch('/api/receipt', { method: 'POST', body: formData });
+      const res = await fetch('/api/parse', { method: 'POST', body: formData });
 
       if (!res.ok) {
         throw new Error('Failed to upload the receipt. Please try again.');

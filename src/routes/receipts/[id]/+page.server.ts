@@ -1,13 +1,9 @@
 import type { ParsedReceipt } from '$lib/types';
-import type { KVNamespace } from '@cloudflare/workers-types';
-
-// Cloudflare KV binding
-declare const RECEIPTS: KVNamespace;
 
 export const load = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
-  // Simulated data (replace with real KV store retrieval if needed)
+  // Simulate fetching data or use real KV store
   const receiptData = JSON.stringify({
     name: 'Flatiron Steak',
     modifiers: [
@@ -26,7 +22,7 @@ export const load = async ({ params }: { params: { id: string } }) => {
       { item: 'Bearnaise', price: 1.5, qty: 1 },
       { item: 'Peppercorn', price: 1.5, qty: 1 }
     ]
-  });
+  }); // Replace with `await RECEIPTS.get(id)` for real data
 
   if (!receiptData) {
     throw new Error('Receipt not found');
@@ -34,7 +30,8 @@ export const load = async ({ params }: { params: { id: string } }) => {
 
   const receipt: ParsedReceipt = JSON.parse(receiptData);
 
+  // Return the receipt wrapped in an object
   return {
-    props: { receipt },
+    props: { receipt }
   };
 };

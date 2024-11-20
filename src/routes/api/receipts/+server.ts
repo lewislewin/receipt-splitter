@@ -13,7 +13,7 @@ export const POST = async ({ request }: { request: Request }) => {
     await kv.put(receiptId, JSON.stringify(data));
 
     return json({ id: receiptId });
-  } catch (error) {
+  } catch (error: unknown) {
     return json({ error: error.message }, { status: 500 });
   }
 };
