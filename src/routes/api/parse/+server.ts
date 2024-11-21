@@ -1,4 +1,3 @@
-import { json } from '@sveltejs/kit';
 import { OpenAI } from 'openai';
 import { env } from '$env/dynamic/private';
 import type { ParsedReceipt } from '$lib/types';
