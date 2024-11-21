@@ -12,9 +12,11 @@ const openAi = new OpenAI({
   apiKey: env.SECRET_OPENAPI_API_KEY,
 });
 
+const credentials = JSON.parse(env.GOOGLE_APPLICATION_CREDENTIALS || '{}');
+
 // Initialize Google Vision Client
 const visionClient = new vision.ImageAnnotatorClient({
-  keyFilename: env.SECRET_GOOGLE_APPLICATION_CREDENTIALS,
+  credentials
 });
 
 export const POST = async ({ request }: { request: Request }) => {
