@@ -6,37 +6,6 @@
   let receiptInput: HTMLInputElement | null = null;
   let parsedReceipt: ParsedReceipt | null = null;
 
-  
-
-  // Generate a receipt link by sending it to the server
-  async function generateReceiptLink() {
-    try {
-      if (!parsedReceipt) {
-        console.error('No receipt to generate a link for');
-        return;
-      }
-
-      const response = await fetch('/api/receipts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(parsedReceipt),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to generate link: ${response.statusText}`);
-      }
-
-      // Ensure the response contains the receipt ID
-      const record: ApiResponse = await response.json();
-      console.log('Receipt link generated:', record.id);
-
-      // Navigate to the generated URL
-      goto(`/receipts/${record.id}`);
-    } catch (error) {
-      console.error('Error generating receipt link:', error);
-    }
-  }
-
   const parseReceipt = async () => {
     if (!receiptInput || !receiptInput.files || receiptInput.files.length === 0) {
       alert('Please select a receipt image!');

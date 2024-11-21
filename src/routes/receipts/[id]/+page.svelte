@@ -29,8 +29,6 @@
   {#if data?.receipt}
     <!-- Page Title -->
     <div class="w-full max-w-5xl bg-white p-8 rounded-lg shadow-lg">
-      <h1 class="text-4xl font-bold mb-8 text-center">{data.receipt.name}</h1>
-
       <!-- Receipt Wrapper -->
       <div class="w-full max-w-4xl mx-auto">
         <ReceiptWrapper
