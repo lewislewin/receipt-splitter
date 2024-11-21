@@ -56,14 +56,7 @@ export const POST = async ({ request }: { request: Request }) => {
   try {
     // Compress and optimize the image
     const buffer = await file.arrayBuffer();
-    const optimizedImage = await sharp(Buffer.from(buffer))
-      .grayscale()
-      .resize({ width: 800 })
-      .jpeg({ quality: 50 })
-      .toBuffer();
-
-    // Convert optimized image to base64
-    const base64Image = optimizedImage.toString('base64');
+    const base64Image = Buffer.from(buffer).toString('base64');
 
     // Use Google Vision REST API to perform OCR
     const text = await callGoogleVisionAPI(base64Image);
