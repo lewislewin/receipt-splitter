@@ -47,13 +47,6 @@ async function callGoogleVisionAPI(base64Image: string) {
 export const POST = async ({ request }: { request: Request }) => {
   console.log('Request Headers:', Object.fromEntries(request.headers.entries()));
   console.log('Request Method:', request.method);
-  return new Response(JSON.stringify({ error: 'Receipt image is required' }), {
-    status: 400,
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-    },
-  });
   const data = await request.formData();
   const file = data.get('receipt') as File;
 
