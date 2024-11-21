@@ -7,9 +7,10 @@
   let parsedReceipt: ParsedReceipt | null = null;
 
   interface ApiResponse {
-    receipt: ParsedReceipt;
+    id: string;
   }
 
+  // Generate a receipt link by sending it to the server
   async function generateReceiptLink() {
     try {
       if (!parsedReceipt) {
@@ -27,10 +28,12 @@
         throw new Error(`Failed to generate link: ${response.statusText}`);
       }
 
-      const id: number = await response.json();
-      console.log('Receipt link generated:', id);
+      // Ensure the response contains the receipt ID
+      const record: ApiResponse = await response.json();
+      console.log('Receipt link generated:', record.id);
 
-      goto('receipts/' + id);
+      // Navigate to the generated URL
+      goto(`/receipts/${record.id}`);
     } catch (error) {
       console.error('Error generating receipt link:', error);
     }
@@ -53,7 +56,7 @@
         throw new Error('Failed to upload the receipt. Please try again.');
       }
 
-      const responseJson: ApiResponse = await res.json();
+      const responseJson: { receipt: ParsedReceipt } = await res.json();
       parsedReceipt = responseJson.receipt;
     } catch (error) {
       alert(error.message);
@@ -87,7 +90,7 @@
   <!-- Parsed Receipt -->
   {#if parsedReceipt}
     <div class="w-full max-w-5xl bg-white p-8 rounded-lg shadow-lg">
-      <ReceiptWrapper {parsedReceipt} />
+      <ReceiptWrapper {parsedReceipt} readOnly={false}/>
       <div class="mt-6 flex justify-center">
         <button
           on:click={generateReceiptLink}

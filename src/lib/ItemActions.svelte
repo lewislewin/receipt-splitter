@@ -1,7 +1,6 @@
 <script lang="ts">
-	import type { ReceiptItem } from '$lib/types';
 
-	let { update, remove, item, canRemove } = $props();
+	let { update, remove, item, canEdit } = $props();
 
 	const incrementQty = () => {
 		const updatedItem = { ...item, qty: item.qty + 1 };
@@ -32,7 +31,7 @@
 	>
 		+
 	</button>
-	{#if canRemove}
+	{#if canEdit}
 		<button
 			onclick={handleRemove}
 			class="w-24 rounded bg-red-500 px-3 py-2 font-bold text-white hover:bg-red-600"
