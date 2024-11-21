@@ -1,8 +1,9 @@
 <script lang="ts">
   import ItemsTable from './ItemsTable.svelte';
-  import type { ReceiptItem } from '$lib/types';
+  import ModifiersTable from './ModifiersTable.svelte';
+  import type { ReceiptItem, Modifier } from '$lib/types';
 
-  let { receipt, canEdit } = $props()
+  let { receipt, canEdit } = $props();
 
   const updateItem = (index: number, updatedItem: ReceiptItem) => {
     const updatedItems = [...receipt.items];
@@ -21,6 +22,24 @@
       items: [...receipt.items, { item: '', qty: 1, price: 0 }],
     };
   };
+
+  const updateModifier = (index: number, updatedModifier: Modifier) => {
+    const updatedModifiers = [...receipt.modifiers];
+    updatedModifiers[index] = updatedModifier;
+    receipt = { ...receipt, modifiers: updatedModifiers };
+  };
+
+  const removeModifier = (index: number) => {
+    const updatedModifiers = receipt.modifiers.filter((_, i) => i !== index);
+    receipt = { ...receipt, modifiers: updatedModifiers };
+  };
+
+  const addModifier = () => {
+    receipt = {
+      ...receipt,
+      modifiers: [...receipt.modifiers, { type: '', percentage: 0, value: 0 }],
+    };
+  };
 </script>
 
 <div class="min-h-screen w-full max-w-5xl mx-auto bg-white p-10 rounded-lg shadow-lg">
@@ -36,14 +55,35 @@
       {canEdit}
     />
     {#if canEdit}
-    <div class="mt-6 text-center">
-      <button
-        onclick={addItem}
-        class="rounded bg-blue-500 px-6 py-3 text-lg font-bold text-white hover:bg-blue-600"
-      >
-        Add Item
-      </button>
-    </div>
+      <div class="mt-6 text-center">
+        <button
+          onclick={addItem}
+          class="rounded bg-blue-500 px-6 py-3 text-lg font-bold text-white hover:bg-blue-600"
+        >
+          Add Item
+        </button>
+      </div>
+    {/if}
+  </div>
+
+  <!-- Modifiers Table -->
+  <div class="mb-10">
+    <h3 class="mb-6 text-center text-2xl font-semibold text-gray-700">Modifiers</h3>
+    <ModifiersTable
+      modifiers={receipt.modifiers}
+      onModifierUpdate={updateModifier}
+      onModifierRemove={removeModifier}
+      {canEdit}
+    />
+    {#if canEdit}
+      <div class="mt-6 text-center">
+        <button
+          onclick={addModifier}
+          class="rounded bg-green-500 px-6 py-3 text-lg font-bold text-white hover:bg-green-600"
+        >
+          Add Modifier
+        </button>
+      </div>
     {/if}
   </div>
 </div>
