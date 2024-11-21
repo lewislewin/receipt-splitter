@@ -13,6 +13,8 @@
       item.qty = 0
     });
   }
+
+  
 </script>
 
 <div class="min-h-screen flex flex-col items-center bg-gray-100 p-8 md:p-12">
@@ -24,7 +26,10 @@
         on:update={(e) => updateReceipt(e.detail)}
         {canEdit}
       />
+      
     </div>
+
+    
   {:else}
     <p class="text-gray-500 text-center text-xl">No receipt loaded.</p>
   {/if}

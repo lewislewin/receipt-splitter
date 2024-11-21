@@ -6,9 +6,7 @@
   let receiptInput: HTMLInputElement | null = null;
   let parsedReceipt: ParsedReceipt | null = null;
 
-  interface ApiResponse {
-    id: string;
-  }
+  
 
   // Generate a receipt link by sending it to the server
   async function generateReceiptLink() {
@@ -91,15 +89,7 @@
   {#if parsedReceipt}
     <div class="w-full max-w-5xl bg-white p-8 rounded-lg shadow-lg">
       <ReceiptWrapper receipt={parsedReceipt} canEdit={true}/>
-      <div class="mt-6 flex justify-center">
-        <button
-          on:click={generateReceiptLink}
-          aria-label="Generate Receipt Link"
-          class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors text-lg"
-        >
-          Generate Link
-        </button>
-      </div>
+      
     </div>
   {/if}
 </div>

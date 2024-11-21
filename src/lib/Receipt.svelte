@@ -2,9 +2,14 @@
   import ItemsTable from './ItemsTable.svelte';
   import ModifiersTable from './ModifiersTable.svelte';
   import type { ReceiptItem, Modifier } from '$lib/types';
+	import { goto } from '$app/navigation';
 
   let { receipt, canEdit } = $props();
 
+  interface ApiResponse {
+    id: string;
+  }
+  
   const updateItem = (index: number, updatedItem: ReceiptItem) => {
     const updatedItems = [...receipt.items];
     updatedItems[index] = updatedItem;
@@ -40,6 +45,35 @@
       modifiers: [...receipt.modifiers, { type: '', percentage: 0, value: 0 }],
     };
   };
+
+  // Generate a receipt link by sending it to the server
+  async function generateReceiptLink() {
+    try {
+      if (!receipt) {
+        console.error('No receipt to generate a link for');
+        return;
+      }
+
+      const response = await fetch('/api/receipts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(receipt),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to generate link: ${response.statusText}`);
+      }
+
+      // Ensure the response contains the receipt ID
+      const record: ApiResponse = await response.json();
+      console.log('Receipt link generated:', record.id);
+
+      // Navigate to the generated URL
+      goto(`/receipts/${record.id}`);
+    } catch (error) {
+      console.error('Error generating receipt link:', error);
+    }
+  }
 </script>
 
 <div class="min-h-screen w-full max-w-5xl mx-auto bg-white p-10 rounded-lg shadow-lg">
@@ -82,6 +116,15 @@
           class="rounded bg-green-500 px-6 py-3 text-lg font-bold text-white hover:bg-green-600"
         >
           Add Modifier
+        </button>
+      </div>
+      <div class="mt-6 flex justify-center">
+        <button
+          onclick={generateReceiptLink}
+          aria-label="Generate Receipt Link"
+          class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors text-lg"
+        >
+          Generate Link
         </button>
       </div>
     {/if}
