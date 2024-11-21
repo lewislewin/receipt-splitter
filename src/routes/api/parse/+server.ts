@@ -49,7 +49,13 @@ export const POST = async ({ request }: { request: Request }) => {
   const file = data.get('receipt') as File;
 
   if (!file) {
-    return json({ error: 'Receipt image is required' }, { status: 400 });
+    return new Response(JSON.stringify({ error: 'Receipt image is required' }), {
+      status: 400,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
   }
 
   try {
@@ -120,9 +126,33 @@ export const POST = async ({ request }: { request: Request }) => {
     // const receiptId = uuidv4();
     // await RECEIPTS.put(receiptId, JSON.stringify(structuredReceipt));
 
-    return json({ receipt: structuredReceipt });
+    return new Response(JSON.stringify({ receipt: structuredReceipt }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
   } catch (error) {
     console.error('Error processing receipt:', error);
-    return json({ error: 'Failed to process the receipt' }, { status: 500 });
+    return new Response(JSON.stringify({ error: 'Failed to process the receipt' }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
   }
+};
+
+
+export const OPTIONS = () => {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });
 };
