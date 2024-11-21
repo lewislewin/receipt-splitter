@@ -1,21 +1,21 @@
 import { env } from '$env/dynamic/private';
 import type { KVNamespace } from '@cloudflare/workers-types';
 
-// Simulated KV store for development
 const inMemoryKV: Record<string, string> = {};
 
-// Cloudflare KV binding
-declare const RECEIPTS: KVNamespace;
+declare const RECEIPTS: KVNamespace | undefined;
 
-// Function to select the appropriate KV store
 export const getKV = () => {
-  if (env.NODE_ENV === 'development') {
+  if (env.NODE_ENV === 'development' || typeof RECEIPTS === 'undefined') {
     return {
       put: async (key: string, value: string) => {
-        console.log(key, value)
+        console.log('Storing in dev KV:', key, value);
         inMemoryKV[key] = value;
       },
-      get: async (key: string) => inMemoryKV[key] ?? null,
+      get: async (key: string) => {
+        console.log('Retrieving from dev KV:', key);
+        return inMemoryKV[key] ?? null;
+      },
     };
   }
   return RECEIPTS; // Cloudflare KV in production
