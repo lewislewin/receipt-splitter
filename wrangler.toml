@@ -6,3 +6,8 @@ kv_namespaces = [
 ]
 
 account_id = "6e8ca19eaa8c4606f3e4ae3ff816b8fc"
+
+[build]
+command = "npm run build"
+output_directory = "build"
+node_version = "18.18.0"
