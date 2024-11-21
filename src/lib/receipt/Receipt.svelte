@@ -1,6 +1,6 @@
 <script lang="ts">
-  import ItemsTable from './ItemsTable.svelte';
-  import ModifiersTable from './ModifiersTable.svelte';
+  import ItemsTable from './tables/items/ItemsTable.svelte';
+  import ModifiersTable from './tables/modifiers/ModifiersTable.svelte';
   import type { ReceiptItem, Modifier, ParsedReceipt } from '$lib/types';
   import { goto } from '$app/navigation';
 

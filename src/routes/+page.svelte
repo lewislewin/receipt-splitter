@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import type { ParsedReceipt } from '$lib/types';
-  import ReceiptWrapper from '$lib/ReceiptWrapper.svelte';
+  import ReceiptWrapper from '$lib/receipt/ReceiptWrapper.svelte';
 
   let receiptInput: HTMLInputElement | null = null;
   let parsedReceipt: ParsedReceipt | null = null;

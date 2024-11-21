@@ -1,5 +1,5 @@
 <script lang="ts">
-  import ReceiptWrapper from '$lib/ReceiptWrapper.svelte';
+  import ReceiptWrapper from '$lib/receipt/ReceiptWrapper.svelte';
   import type { ParsedReceipt } from '$lib/types';
 
   export let data: { receipt?: ParsedReceipt };
