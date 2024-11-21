@@ -34,14 +34,9 @@
       <!-- Receipt Wrapper -->
       <div class="w-full max-w-4xl mx-auto">
         <ReceiptWrapper
-          parsedReceipt={data.receipt}
+          receipt={data.receipt}
           canEdit={false}
         />
-      </div>
-
-      <!-- Total -->
-      <div class="mt-8 text-center">
-        <p class="text-xl font-bold">Total: £{calculateTotal()}</p>
       </div>
     </div>
   {:else}

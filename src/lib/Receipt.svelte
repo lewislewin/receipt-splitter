@@ -1,6 +1,6 @@
 <script lang="ts">
   import ItemsTable from './ItemsTable.svelte';
-  import type { ReceiptItem, ParsedReceipt } from '$lib/types';
+  import type { ReceiptItem } from '$lib/types';
 
   let { receipt, canEdit } = $props()
 

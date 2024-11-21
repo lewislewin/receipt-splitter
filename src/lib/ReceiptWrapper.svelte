@@ -2,43 +2,28 @@
   import Receipt from './Receipt.svelte';
   import type { ParsedReceipt } from '$lib/types';
 
-  export let parsedReceipt: ParsedReceipt | null = null;
-  export let canEdit: boolean = false
-
-  const clearReceipt = () => (parsedReceipt = null);
+  let {receipt, canEdit}: {receipt: ParsedReceipt | null, canEdit: boolean} = $props()
 
   const updateReceipt = (updatedReceipt: ParsedReceipt) => {
-    parsedReceipt = updatedReceipt;
+    receipt = updatedReceipt;
   };
 
   if (!canEdit) {
-    parsedReceipt?.items.forEach(item => {
+    receipt?.items.forEach(item => {
       item.qty = 0
     });
   }
 </script>
 
 <div class="min-h-screen flex flex-col items-center bg-gray-100 p-8 md:p-12">
-  {#if parsedReceipt}
+  {#if receipt}
     <div class="w-full max-w-4xl bg-white p-8 rounded-lg shadow-lg">
       <!-- Receipt Component -->
       <Receipt
-        receipt={parsedReceipt}
+        receipt={receipt}
         on:update={(e) => updateReceipt(e.detail)}
         {canEdit}
       />
-
-      <!-- Action Buttons -->
-      {#if canEdit}
-      <div class="flex justify-end mt-8">
-        <button
-          on:click={clearReceipt}
-          class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg text-lg"
-        >
-          Clear Receipt
-        </button>
-      </div>
-      {/if}
     </div>
   {:else}
     <p class="text-gray-500 text-center text-xl">No receipt loaded.</p>
