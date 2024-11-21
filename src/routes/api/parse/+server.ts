@@ -1,9 +1,8 @@
 import { json } from '@sveltejs/kit';
 import sharp from 'sharp';
 import { OpenAI } from 'openai';
-import vision from '@google-cloud/vision';
+import { env } from '$env/dynamic/private';
 import type { ParsedReceipt } from '$lib/types';
-import { env } from '$env/dynamic/private'
 
 // Initialize OpenAI
 const openAi = new OpenAI({
@@ -12,12 +11,39 @@ const openAi = new OpenAI({
   apiKey: env.SECRET_OPENAPI_API_KEY,
 });
 
-const credentials = JSON.parse(env.GOOGLE_APPLICATION_CREDENTIALS || '{}');
+// Function to call Google Cloud Vision API
+async function callGoogleVisionAPI(base64Image: string) {
+  const apiKey = env.SECRET_GOOGLE_API_KEY; // Use an API key for Vision API
+  const url = `https://vision.googleapis.com/v1/images:annotate?key=${apiKey}`;
 
-// Initialize Google Vision Client
-const visionClient = new vision.ImageAnnotatorClient({
-  credentials
-});
+  const body = {
+    requests: [
+      {
+        image: { content: base64Image },
+        features: [{ type: 'TEXT_DETECTION', maxResults: 1 }],
+      },
+    ],
+  };
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Google Vision API Error: ${response.statusText}`);
+  }
+
+  const result = await response.json();
+  const text = result.responses[0]?.fullTextAnnotation?.text || '';
+
+  if (!text) {
+    throw new Error('OCR failed: No text detected in the receipt.');
+  }
+
+  return text;
+}
 
 export const POST = async ({ request }: { request: Request }) => {
   const data = await request.formData();
@@ -36,9 +62,11 @@ export const POST = async ({ request }: { request: Request }) => {
       .jpeg({ quality: 50 })
       .toBuffer();
 
-    // Use Google Vision API to perform OCR
-    const [result] = await visionClient.textDetection(optimizedImage);
-    const text = result.fullTextAnnotation?.text || '';
+    // Convert optimized image to base64
+    const base64Image = optimizedImage.toString('base64');
+
+    // Use Google Vision REST API to perform OCR
+    const text = await callGoogleVisionAPI(base64Image);
 
     if (!text) {
       throw new Error('OCR failed: No text detected in the receipt.');
