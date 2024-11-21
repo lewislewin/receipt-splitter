@@ -45,6 +45,8 @@ async function callGoogleVisionAPI(base64Image: string) {
 }
 
 export const POST = async ({ request }: { request: Request }) => {
+  console.log('Request Headers:', Object.fromEntries(request.headers.entries()));
+  console.log('Request Method:', request.method);
   const data = await request.formData();
   const file = data.get('receipt') as File;
 
@@ -131,6 +133,8 @@ export const POST = async ({ request }: { request: Request }) => {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
       },
     });
   } catch (error) {
