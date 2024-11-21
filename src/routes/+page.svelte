@@ -90,7 +90,7 @@
   <!-- Parsed Receipt -->
   {#if parsedReceipt}
     <div class="w-full max-w-5xl bg-white p-8 rounded-lg shadow-lg">
-      <ReceiptWrapper {parsedReceipt} canEdit={true}/>
+      <ReceiptWrapper receipt={parsedReceipt} canEdit={true}/>
       <div class="mt-6 flex justify-center">
         <button
           on:click={generateReceiptLink}
