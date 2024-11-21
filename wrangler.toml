@@ -11,3 +11,7 @@ account_id = "6e8ca19eaa8c4606f3e4ae3ff816b8fc"
 command = "npm run build"
 node_version = "18.18.0"
 output_directory = ".svelte-kit/cloudflare"
+
+[observability]
+enabled = true
+head_sampling_rate = 1
