@@ -47,6 +47,13 @@ async function callGoogleVisionAPI(base64Image: string) {
 export const POST = async ({ request }: { request: Request }) => {
   console.log('Request Headers:', Object.fromEntries(request.headers.entries()));
   console.log('Request Method:', request.method);
+  return new Response(JSON.stringify({ error: 'Receipt image is required' }), {
+    status: 400,
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+    },
+  });
   const data = await request.formData();
   const file = data.get('receipt') as File;
 
@@ -123,10 +130,6 @@ export const POST = async ({ request }: { request: Request }) => {
     const cleanedContent = rawContent.replace(/^```json\s*/, '').replace(/```$/, '');
     const structuredReceipt: ParsedReceipt = JSON.parse(cleanedContent);
     console.log(structuredReceipt)
-
-    // Store in Cloudflare KV
-    // const receiptId = uuidv4();
-    // await RECEIPTS.put(receiptId, JSON.stringify(structuredReceipt));
 
     return new Response(JSON.stringify({ receipt: structuredReceipt }), {
       status: 200,
