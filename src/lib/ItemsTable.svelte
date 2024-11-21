@@ -63,7 +63,7 @@
           <td class="px-4 py-2 text-center">
             <ItemActions
               {item}
-              canEdit
+              {canEdit}
               update={(updatedValue: ReceiptItem) => onItemUpdate(index, updatedValue)}
               remove={() => onItemRemove(index)}
             />

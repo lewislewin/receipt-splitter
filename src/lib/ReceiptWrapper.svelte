@@ -3,7 +3,7 @@
   import type { ParsedReceipt } from '$lib/types';
 
   export let parsedReceipt: ParsedReceipt | null = null;
-  export let readOnly: boolean = true
+  export let canEdit: boolean = false
 
   const clearReceipt = () => (parsedReceipt = null);
 
@@ -11,7 +11,7 @@
     parsedReceipt = updatedReceipt;
   };
 
-  if (readOnly) {
+  if (!canEdit) {
     parsedReceipt?.items.forEach(item => {
       item.qty = 0
     });
@@ -25,11 +25,11 @@
       <Receipt
         receipt={parsedReceipt}
         on:update={(e) => updateReceipt(e.detail)}
-        readOnly
+        {canEdit}
       />
 
       <!-- Action Buttons -->
-      {#if !readOnly}
+      {#if canEdit}
       <div class="flex justify-end mt-8">
         <button
           on:click={clearReceipt}

@@ -2,7 +2,7 @@
   import ItemsTable from './ItemsTable.svelte';
   import type { ReceiptItem, ParsedReceipt } from '$lib/types';
 
-  let { receipt, readOnly } = $props()
+  let { receipt, canEdit } = $props()
 
   const updateItem = (index: number, updatedItem: ReceiptItem) => {
     const updatedItems = [...receipt.items];
@@ -33,9 +33,9 @@
       items={receipt.items}
       onItemUpdate={updateItem}
       onItemRemove={removeItem}
-      canEdit={!readOnly}
+      {canEdit}
     />
-    {#if !readOnly}
+    {#if canEdit}
     <div class="mt-6 text-center">
       <button
         onclick={addItem}

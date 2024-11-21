@@ -35,7 +35,7 @@
       <div class="w-full max-w-4xl mx-auto">
         <ReceiptWrapper
           parsedReceipt={data.receipt}
-          readOnly={true}
+          canEdit={false}
         />
       </div>
 
