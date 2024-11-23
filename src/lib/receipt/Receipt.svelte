@@ -9,7 +9,7 @@
   interface ApiResponse {
     id: string;
   }
-
+  console.log('Initial Receipt:', receipt)
   let monzoLink = ''
 
   // Calculate the total with included modifiers

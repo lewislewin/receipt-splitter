@@ -3,7 +3,7 @@
   import type { ParsedReceipt } from '$lib/types';
 
   let {receipt, canEdit}: {receipt: ParsedReceipt | null, canEdit: boolean} = $props()
-
+  console.log('Wrapper', receipt)
   const updateReceipt = (updatedReceipt: ParsedReceipt) => {
     receipt = updatedReceipt;
   };
