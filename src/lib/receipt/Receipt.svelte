@@ -3,6 +3,7 @@
   import ModifiersTable from './tables/modifiers/ModifiersTable.svelte';
   import type { ReceiptItem, Modifier, ParsedReceipt } from '$lib/types';
   import { goto } from '$app/navigation';
+	import { storeReceipt } from '$lib/api';
 
   let { receipt, canEdit }: { receipt: ParsedReceipt; canEdit: boolean } = $props();
 
@@ -45,7 +46,7 @@
     if (match) {
       const recipient = match[1];
       const reason = match[3] || '';
-      receipt = { ...receipt, monzoId: recipient, reason };
+      receipt = { ...receipt, monzo_id: recipient, reason };
     } else {
       console.error('Invalid Monzo.me link');
     }
@@ -53,7 +54,7 @@
 
   const payWithMonzo = () => {
     const total = calculateTotal().toFixed(2);
-    const recipient = receipt.monzoId;
+    const recipient = receipt.monzo_id;
     const reason = receipt.reason || 'Payment';
 
     if (recipient) {
@@ -102,29 +103,33 @@
 
   async function generateReceiptLink() {
     try {
-      if (!receipt || !receipt.monzoId) {
-        console.error('No receipt to generate a link for');
-        return;
-      }
+        if (!receipt) {
+            console.error('No receipt to generate a link for');
+            alert('No receipt data available.');
+            return;
+        }
 
-      const response = await fetch('/api/receipts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(receipt),
-      });
+        if (!receipt.monzo_id) {
+            console.error('Monzo link is required');
+            alert('Please provide a valid Monzo link before generating the receipt link.');
+            return;
+        }
 
-      if (!response.ok) {
-        throw new Error(`Failed to generate link: ${response.statusText}`);
-      }
+        console.log('Storing receipt on the server:', receipt);
 
-      const record: ApiResponse = await response.json();
-      console.log('Receipt link generated:', record.id);
+        // Use the storeReceipt helper to send the receipt to the backend
+        const response = await storeReceipt(receipt);
 
-      goto(`/receipts/${record.id}`);
-    } catch (error) {
-      console.error('Error generating receipt link:', error);
+        console.log('Receipt successfully stored, ID:', response.id);
+
+        // Redirect to the receipt details page
+        goto(`/receipts/${response.id}`);
+    } catch (error: any) {
+        console.error('Error generating receipt link:', error.message);
+        alert(error.message || 'Failed to generate receipt link. Please try again.');
     }
-  }
+}
+
 </script>
 
 <div class="min-h-screen w-full max-w-5xl mx-auto bg-white p-10 rounded-lg shadow-lg flex flex-col justify-between">

@@ -15,7 +15,7 @@ export interface ParsedReceipt {
     name: string
     items: ReceiptItem[]
     modifiers: Modifier[]
-    monzoId: string
+    monzo_id: string
     reason: string
   }
   
