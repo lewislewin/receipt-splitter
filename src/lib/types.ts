@@ -12,6 +12,7 @@ export interface Modifier {
 }
 
 export interface ParsedReceipt {
+    id: number | undefined
     name: string
     items: ReceiptItem[]
     modifiers: Modifier[]
