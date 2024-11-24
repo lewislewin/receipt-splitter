@@ -23,22 +23,21 @@
   };
 </script>
 
-<div class="min-h-screen flex flex-col items-center bg-gray-100 p-8 md:p-12">
+<div class="min-h-screen flex flex-col items-center bg-gray-100 p-4">
   <!-- Upload Form -->
   {#if !receipt}
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
-      <h1 class="text-3xl font-bold mb-6 text-center">Upload a Receipt</h1>
-      <div class="flex flex-col gap-6">
+    <div class="bg-white p-4 rounded-md shadow w-full">
+      <h1 class="text-2xl font-bold mb-4 text-center">Upload a Receipt</h1>
+      <div class="flex flex-col gap-4">
         <input
           type="file"
           accept="image/*"
           bind:this={receiptInput}
-          class="block w-full text-lg text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+          class="w-full text-lg border rounded-md bg-gray-50 focus:outline-none"
         />
         <button
           on:click={handleParseReceipt}
-          aria-label="Upload Receipt"
-          class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors text-lg"
+          class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded-md transition-colors"
         >
           Parse Receipt
         </button>
@@ -48,7 +47,7 @@
 
   <!-- Parsed Receipt -->
   {#if receipt}
-    <div class="w-full max-w-5xl bg-white p-8 rounded-lg shadow-lg">
+    <div class="w-full bg-white p-4 rounded-md shadow">
       <ReceiptWrapper {receipt} canEdit={true}/>
     </div>
   {/if}

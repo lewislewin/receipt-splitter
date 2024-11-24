@@ -132,15 +132,11 @@
 
 </script>
 
-<div class="min-h-screen w-full max-w-5xl mx-auto bg-white p-10 rounded-lg shadow-lg flex flex-col justify-between">
-  <!-- Header -->
-  <h2 class="mb-8 text-center text-4xl font-bold text-gray-800">{receipt.name}</h2>
-
-  <!-- Content -->
+<div class="min-h-screen flex flex-col bg-white p-4 shadow">
+  <h2 class="text-3xl font-bold text-center mb-4">{receipt.name}</h2>
   <div class="flex-grow">
-    <!-- Items Table -->
-    <div class="mb-10">
-      <h3 class="mb-6 text-center text-2xl font-semibold text-gray-700">Items</h3>
+    <div class="mb-6">
+      <h3 class="text-lg font-semibold text-center">Items</h3>
       <ItemsTable
         items={receipt.items}
         onItemUpdate={updateItem}
@@ -148,10 +144,8 @@
         {canEdit}
       />
     </div>
-
-    <!-- Modifiers Table -->
-    <div class="mb-10">
-      <h3 class="mb-6 text-center text-2xl font-semibold text-gray-700">Modifiers</h3>
+    <div class="mb-6">
+      <h3 class="text-lg font-semibold text-center">Modifiers</h3>
       <ModifiersTable
         modifiers={receipt.modifiers}
         onModifierUpdate={updateModifier}
@@ -159,63 +153,27 @@
         {canEdit}
       />
     </div>
-
-    <!-- Monzo.me Link Input -->
     {#if canEdit}
-      <div class="mb-6">
-        <label for="monzo-link" class="block text-lg font-semibold text-gray-700 mb-2">
-          Monzo.me Link
-        </label>
+      <div class="mb-4">
+        <label class="block mb-2">Monzo.me Link</label>
         <input
-          id="monzo-link"
           type="url"
           bind:value={monzoLink}
-          placeholder="https://monzo.me/joebloggs/100?h=31n7Wo&d=Dinner"
-          class="w-full p-3 border rounded-lg text-gray-800 focus:outline-none focus:ring focus:ring-blue-300"
+          placeholder="https://monzo.me/link"
+          class="w-full p-2 border rounded focus:outline-none"
           onblur={() => parseMonzoLink(monzoLink)}
         />
-        <p class="mt-2 text-sm text-gray-600">
-          Paste a Monzo.me link here to extract recipient and reason.
-        </p>
       </div>
     {/if}
-
-    <!-- Total Display -->
-    <div class="mt-6 text-center">
-      <h3 class="text-2xl font-bold text-gray-700">Total: £{calculateTotal().toFixed(2)}</h3>
-    </div>
+    <h3 class="text-center text-lg font-bold mt-4">Total: £{calculateTotal().toFixed(2)}</h3>
   </div>
-
-  <!-- Buttons at the Bottom -->
-  {#if canEdit}
-    <div class="mt-10 flex flex-col sm:flex-row sm:space-x-4 justify-center items-center">
-      <button
-        onclick={addItem}
-        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors text-lg w-full sm:w-auto mb-4 sm:mb-0"
-      >
-        Add Item
-      </button>
-      <button
-        onclick={addModifier}
-        class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-colors text-lg w-full sm:w-auto mb-4 sm:mb-0"
-      >
-        Add Modifier
-      </button>
-      <button
-        onclick={generateReceiptLink}
-        class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 px-6 rounded-lg transition-colors text-lg w-full sm:w-auto"
-      >
-        Generate Link
-      </button>
-    </div>
-  {:else}
-    <div class="mt-10 flex justify-center">
-      <button
-        onclick={payWithMonzo}
-        class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-colors text-lg"
-      >
-        Pay Now
-      </button>
-    </div>
-  {/if}
+  <div class="mt-4 flex justify-center gap-4">
+    {#if canEdit}
+      <button onclick={addItem} class="bg-blue-500 text-white py-2 px-4 rounded">Add Item</button>
+      <button onclick={addModifier} class="bg-green-500 text-white py-2 px-4 rounded">Add Modifier</button>
+      <button onclick={generateReceiptLink} class="bg-gray-800 text-white py-2 px-4 rounded">Generate Link</button>
+    {:else}
+      <button onclick={payWithMonzo} class="bg-green-500 text-white py-2 px-4 rounded">Pay Now</button>
+    {/if}
+  </div>
 </div>

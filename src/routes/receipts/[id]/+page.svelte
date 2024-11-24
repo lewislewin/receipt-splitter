@@ -39,32 +39,18 @@
   };
 </script>
 
-<div class="min-h-screen flex flex-col items-center bg-gray-100 p-8 md:p-12">
-  <!-- Loading State -->
+<div class="min-h-screen flex flex-col bg-gray-100 p-4">
   {#if loading}
-    <p class="text-gray-500 text-center text-lg">Loading receipt...</p>
+    <p class="text-gray-500 text-center">Loading receipt...</p>
   {:else if error}
-    <!-- Error State -->
-    <p class="text-red-500 text-center text-lg">{error}</p>
+    <p class="text-red-500 text-center">{error}</p>
   {:else if receipt}
-    <!-- Render the Receipt -->
-    <div class="w-full max-w-5xl bg-white p-8 rounded-lg shadow-lg">
-      <!-- Receipt Title -->
-      <h1 class="text-3xl font-bold mb-6 text-center">{receipt.name}</h1>
-      <!-- Receipt Wrapper -->
-      <div class="w-full max-w-4xl mx-auto">
-        <ReceiptWrapper
-          {receipt}
-          canEdit={false}
-        />
-      </div>
-      <!-- Total -->
-      <div class="mt-6 text-center">
-        <h3 class="text-2xl font-bold text-gray-700">Total: £{calculateTotal()}</h3>
-      </div>
+    <div class="w-full bg-white p-4 rounded-md shadow">
+      <h1 class="text-2xl font-bold mb-4 text-center">{receipt.name}</h1>
+      <ReceiptWrapper {receipt} canEdit={false} />
+      <h3 class="mt-6 text-center text-lg font-bold text-gray-700">Total: £{calculateTotal()}</h3>
     </div>
   {:else}
-    <!-- Fallback State -->
-    <p class="text-gray-500 text-center text-lg">No receipt found.</p>
+    <p class="text-gray-500 text-center">No receipt found.</p>
   {/if}
 </div>

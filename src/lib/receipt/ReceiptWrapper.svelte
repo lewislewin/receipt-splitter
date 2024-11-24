@@ -17,20 +17,15 @@
   
 </script>
 
-<div class="min-h-screen flex flex-col items-center bg-gray-100 p-8 md:p-12">
+<div class="w-full bg-white p-4 rounded-md shadow">
   {#if receipt}
-    <div class="w-full max-w-4xl bg-white p-8 rounded-lg shadow-lg">
-      <!-- Receipt Component -->
-      <Receipt
-        receipt={receipt}
-        on:update={(e) => updateReceipt(e.detail)}
-        {canEdit}
-      />
-      
-    </div>
-
-    
+    <Receipt
+      receipt={receipt}
+      on:update={(e) => updateReceipt(e.detail)}
+      {canEdit}
+    />
   {:else}
-    <p class="text-gray-500 text-center text-xl">No receipt loaded.</p>
+    <p class="text-gray-500 text-center">No receipt loaded.</p>
   {/if}
 </div>
+
