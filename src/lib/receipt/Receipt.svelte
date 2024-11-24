@@ -48,17 +48,19 @@
 	};
 
 	const payWithMonzo = () => {
-		const total = calculateTotal().toFixed(2);
-		const recipient = receipt.monzo_id;
-		const reason = receipt.reason || 'Payment';
+    // Ensure consistent rounding
+    const total = (Math.round(calculateTotal() * 100) / 100).toFixed(2);
+    const recipient = receipt.monzo_id;
+    const reason = receipt.reason || 'Payment';
 
-		if (recipient) {
-			const url = `https://monzo.me/${recipient}/${total}?d=${encodeURIComponent(reason)}`;
-			window.location.href = url;
-		} else {
-			console.error('Recipient not set');
-		}
-	};
+    if (recipient) {
+      const url = `https://monzo.me/${recipient}/${total}?d=${encodeURIComponent(reason)}`;
+      window.location.href = url;
+    } else {
+      console.error('Recipient not set');
+    }
+  };
+
 
 	const updateItem = (index: number, updatedItem: ReceiptItem) => {
 		const updatedItems = [...receipt.items];
