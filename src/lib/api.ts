@@ -59,17 +59,20 @@ export const isAuthenticated = (): boolean => {
  */
 const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
 	const token = getToken();
-
+    alert("A")
 	const headers = {
 		...(token ? { Authorization: `Token ${token}` } : {}),
 		...options.headers
 	};
+    alert("B")
 
 	try {
+        alert("C")
 		const response = await fetch(`${PUBLIC_API_BASE_URL}${endpoint}`, {
 			...options,
 			headers
 		});
+        alert("D")
 		if (!response.ok) {
 			const error = await response.json();
 			throw new Error(error.error || 'API request failed');
