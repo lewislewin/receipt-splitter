@@ -58,10 +58,8 @@ export const isAuthenticated = (): boolean => {
  * Helper function for API requests
  */
 const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
-    alert("H")
     const token = getToken();
 
-    alert("J")
     const headers = {
         ...(token ? { Authorization: `Token ${token}` } : {}),
         ...options.headers,

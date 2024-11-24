@@ -11,15 +11,11 @@
 			alert('Please select a receipt image!');
 			return;
 		}
-    alert("A")
 		const receiptImage = receiptInput.files[0];
-    alert("B")
 		console.log('Selected File:', receiptImage); // Check if the file is retrieved
-    alert("C")
 
 		try {
 			receipt = await parseReceipt(receiptImage); // Use the parseReceipt function from api.ts
-      alert("D")
 			console.log('Returned Receipt: ', receipt);
 		} catch (error: any) {
 			alert(error.message || 'Failed to parse the receipt. Please try again.');
