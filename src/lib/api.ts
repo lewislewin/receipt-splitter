@@ -1,4 +1,5 @@
 import { PUBLIC_API_BASE_URL } from '$env/static/public';
+import imageCompression from 'browser-image-compression';
 
 // Helper function to check if the code is running on the client side
 const isClient = typeof window !== 'undefined';
@@ -59,20 +60,16 @@ export const isAuthenticated = (): boolean => {
  */
 const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
 	const token = getToken();
-    alert("A")
 	const headers = {
 		...(token ? { Authorization: `Token ${token}` } : {}),
 		...options.headers
 	};
-    alert("B")
 
 	try {
-        alert("C")
 		const response = await fetch(`${PUBLIC_API_BASE_URL}${endpoint}`, {
 			...options,
 			headers
 		});
-        alert("D")
 		if (!response.ok) {
 			const error = await response.json();
 			throw new Error(error.error || 'API request failed');
@@ -90,7 +87,8 @@ const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
 export const parseReceipt = async (receipt: File): Promise<any> => {
     try {
       // Convert file to Base64
-      const receiptBase64 = await fileToBase64(receipt);
+      const compressedReceipt = compressImage(receipt)
+      const receiptBase64 = await fileToBase64(await compressedReceipt);
       console.log('Base64 Encoded Receipt:', receiptBase64);
   
       // Send Base64 string to the API
@@ -107,6 +105,22 @@ export const parseReceipt = async (receipt: File): Promise<any> => {
     }
   };
   
+  /**
+ * Compress the image to reduce its size and dimensions
+ */
+const compressImage = async (file: File): Promise<File> => {
+    const options = {
+        maxSizeMB: 1, // Compress to 1 MB or smaller
+        maxWidthOrHeight: 1024, // Resize if dimensions exceed 1024px
+        useWebWorker: true, // Use a web worker for faster processing
+    };
+    try {
+        return await imageCompression(file, options);
+    } catch (error) {
+        console.error('Image Compression Error:', error);
+        throw new Error('Failed to compress the image. Please try again.');
+    }
+};
 
 const fileToBase64 = (file: File): Promise<string> =>
     new Promise((resolve, reject) => {
