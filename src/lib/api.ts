@@ -66,20 +66,14 @@ const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
 	};
 
 	try {
-		alert('K');
-		alert(headers.Authorization);
-		alert(PUBLIC_API_BASE_URL);
-		alert(options.body);
 		const response = await fetch(`${PUBLIC_API_BASE_URL}${endpoint}`, {
 			...options,
 			headers
 		});
-		alert('L');
 		if (!response.ok) {
 			const error = await response.json();
 			throw new Error(error.error || 'API request failed');
 		}
-		alert('M');
 		return await response.json();
 	} catch (err: any) {
 		console.error('API Fetch Error:', err.message);
