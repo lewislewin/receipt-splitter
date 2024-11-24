@@ -6,119 +6,136 @@ const isClient = typeof window !== 'undefined';
 // Helper functions for token management
 const getToken = (): string | null => (isClient ? localStorage.getItem('authToken') : null);
 const setToken = (token: string): void => {
-    if (isClient) {
-        localStorage.setItem('authToken', token);
-    }
+	if (isClient) {
+		localStorage.setItem('authToken', token);
+	}
 };
 const clearToken = (): void => {
-    if (isClient) {
-        localStorage.removeItem('authToken');
-    }
+	if (isClient) {
+		localStorage.removeItem('authToken');
+	}
 };
 
 /**
  * Login function to authenticate and store the token
  */
 export const login = async (username: string, password: string): Promise<void> => {
-    try {
-        const response = await fetch(`${PUBLIC_API_BASE_URL}/api-token-auth/`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password }),
-        });
+	try {
+		const response = await fetch(`${PUBLIC_API_BASE_URL}/api-token-auth/`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ username, password })
+		});
 
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error || 'Login failed');
-        }
+		if (!response.ok) {
+			const error = await response.json();
+			throw new Error(error.error || 'Login failed');
+		}
 
-        const { token } = await response.json();
-        setToken(token); // Store the token in local storage
-    } catch (err: any) {
-        console.error('Login Error:', err.message);
-        throw err;
-    }
+		const { token } = await response.json();
+		setToken(token); // Store the token in local storage
+	} catch (err: any) {
+		console.error('Login Error:', err.message);
+		throw err;
+	}
 };
 
 /**
  * Logout function to clear the token
  */
 export const logout = (): void => {
-    clearToken();
+	clearToken();
 };
 
 /**
  * Check if the user is authenticated
  */
 export const isAuthenticated = (): boolean => {
-    return !!getToken();
+	return !!getToken();
 };
 
 /**
  * Helper function for API requests
  */
 const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
-    const token = getToken();
+	const token = getToken();
 
-    const headers = {
-        ...(token ? { Authorization: `Token ${token}` } : {}),
-        ...options.headers,
-    };
+	const headers = {
+		...(token ? { Authorization: `Token ${token}` } : {}),
+		...options.headers
+	};
 
-    try {
-        alert("K")
-        alert(headers.Authorization)
-        alert(PUBLIC_API_BASE_URL)
-        alert(options.body)
-        const response = await fetch(`${PUBLIC_API_BASE_URL}${endpoint}`, {
-            ...options,
-            headers,
-        });
-        alert("L")
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error || 'API request failed');
-        }
-        alert("M")
-        return await response.json();
-    } catch (err: any) {
-        console.error('API Fetch Error:', err.message);
-        throw err;
-    }
+	try {
+		alert('K');
+		alert(headers.Authorization);
+		alert(PUBLIC_API_BASE_URL);
+		alert(options.body);
+		const response = await fetch(`${PUBLIC_API_BASE_URL}${endpoint}`, {
+			...options,
+			headers
+		});
+		alert('L');
+		if (!response.ok) {
+			const error = await response.json();
+			throw new Error(error.error || 'API request failed');
+		}
+		alert('M');
+		return await response.json();
+	} catch (err: any) {
+		console.error('API Fetch Error:', err.message);
+		throw err;
+	}
 };
 
 /**
  * Parse a receipt image using the /parse/ endpoint
  */
 export const parseReceipt = async (receipt: File): Promise<any> => {
-    alert("E")
-    const formData = new FormData();
-    alert("F")
-    formData.append('receipt', receipt);
-    alert("G")
-
-    return await apiFetch('/parse/', {
+    try {
+      // Convert file to Base64
+      const receiptBase64 = await fileToBase64(receipt);
+      console.log('Base64 Encoded Receipt:', receiptBase64);
+  
+      // Send Base64 string to the API
+      return await apiFetch('/parse/', {
         method: 'POST',
-        body: formData,
-    });
-};
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ receipt: receiptBase64 }), // Send Base64 in JSON payload
+      });
+    } catch (error) {
+      console.error('Parse Receipt Error:', error);
+      throw new Error('Failed to parse the receipt. Please try again.');
+    }
+  };
+  
+
+const fileToBase64 = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = (error) => reject(error);
+        reader.readAsDataURL(file); // Convert file to Base64
+    }
+);
 
 /**
  * Store a receipt using the /store/ endpoint
  */
 export const storeReceipt = async (receiptData: Record<string, any>): Promise<any> => {
-    return await apiFetch('/store/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(receiptData),
-    });
+	return await apiFetch('/store/', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(receiptData)
+	});
 };
 
 /**
  * Retrieve a stored receipt using the /retrieve/<id>/ endpoint
  */
 export const getReceipt = async (id: string): Promise<any> => {
-    return await apiFetch(`/retrieve/${id}/`, {
-        method: 'GET',
-    });
+	return await apiFetch(`/retrieve/${id}/`, {
+		method: 'GET'
+	});
 };
