@@ -4,6 +4,7 @@
 	import ReceiptWrapper from '$lib/receipt/ReceiptWrapper.svelte';
 
 	let receipt: ParsedReceipt | null = null;
+	let loading: boolean = false; // Loading state
 
 	// Allowed file types
 	const allowedFileTypes = ['image/jpeg', 'image/png'];
@@ -34,11 +35,13 @@
 		console.log('Selected File:', receiptImage); // Log file details for debugging
 
 		try {
-			// Parse the receipt
+			loading = true; // Set loading to true while processing
 			receipt = await parseReceipt(receiptImage);
 			console.log('Returned Receipt: ', receipt);
 		} catch (error: any) {
 			alert(error.message || 'Failed to parse the receipt. Please try again.');
+		} finally {
+			loading = false; // Stop loading after processing
 		}
 	};
 </script>
@@ -59,6 +62,14 @@
 		</div>
 	{/if}
 
+	<!-- Loading Spinner -->
+	{#if loading}
+		<div class="flex justify-center items-center mt-8">
+			<div class="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-solid"></div>
+			<p class="text-blue-500 text-lg ml-4">Processing...</p>
+		</div>
+	{/if}
+
 	<!-- Parsed Receipt -->
 	{#if receipt}
 		<div class="w-full bg-white p-4 rounded-md shadow">
@@ -66,3 +77,20 @@
 		</div>
 	{/if}
 </div>
+
+<style>
+	/* Spinner animation */
+	.animate-spin {
+		border-right-color: transparent;
+		border-radius: 50%;
+		animation: spin 1s linear infinite;
+	}
+	@keyframes spin {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+</style>
