@@ -110,7 +110,7 @@ export const parseReceipt = async (receipt: File): Promise<any> => {
  */
 const compressImage = async (file: File): Promise<File> => {
     const options = {
-        maxSizeMB: 2, // Compress to 1 MB or smaller
+        maxSizeMB: 3, // Compress to 1 MB or smaller
         maxWidthOrHeight: 1024, // Resize if dimensions exceed 1024px
         useWebWorker: true, // Use a web worker for faster processing
     };
