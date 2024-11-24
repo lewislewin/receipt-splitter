@@ -12,27 +12,33 @@
 
 	// Calculate the total with included modifiers
 	const calculateTotal = () => {
-		// Sum items total
-		const itemsTotal = receipt.items.reduce((sum, item) => sum + (item.price ?? 0) * item.qty, 0);
+    // Sum items total
+    const itemsTotal = receipt.items.reduce(
+      (sum, item) => Math.round((sum + (item.price ?? 0) * item.qty) * 100) / 100,
+      0
+    );
 
-		// Calculate included modifiers (e.g., service charge, percentage extras)
-		const includedModifiers = receipt.modifiers.filter((mod) => mod.include);
+    console.log('Items Total:', itemsTotal);
 
-		const totalWithModifiers = includedModifiers.reduce((total, modifier) => {
-			if (modifier.percentage) {
-				// Add percentage-based modifiers
-				return Math.round(total * (1 + modifier.percentage / 100) * 100) / 100;
-			}
-			if (modifier.value) {
-				// Add value-based modifiers
-				return Math.round((total + modifier.value) * 100) / 100;
-			}
-			return total;
-		}, itemsTotal);
+    // Calculate included modifiers (e.g., service charge, percentage extras)
+    const includedModifiers = receipt.modifiers.filter((mod) => mod.include);
 
-		// Return the final total rounded to two decimal places
-		return Math.round(totalWithModifiers * 100) / 100;
-	};
+    const totalWithModifiers = includedModifiers.reduce((total, modifier) => {
+      if (modifier.percentage) {
+        // Add percentage-based modifiers, ensuring rounding
+        return Math.round(total * (1 + modifier.percentage / 100) * 100) / 100;
+      }
+      if (modifier.value) {
+        // Add value-based modifiers, ensuring rounding
+        return Math.round((total + modifier.value) * 100) / 100;
+      }
+      return total;
+    }, itemsTotal);
+
+    // Ensure the final result is rounded
+    return Math.round(totalWithModifiers * 100) / 100;
+  };
+
 
 	const parseMonzoLink = (link: string) => {
 		const regex = /monzo\.me\/([^\/]+)(?:\/([^?]+))?(?:\?.*d=([^&]+))?/;
@@ -48,10 +54,11 @@
 	};
 
 	const payWithMonzo = () => {
-    // Ensure consistent rounding
-    const total = (Math.round(calculateTotal() * 100) / 100).toFixed(2);
+    const total = calculateTotal().toFixed(2); // Ensure consistent formatting
     const recipient = receipt.monzo_id;
     const reason = receipt.reason || 'Payment';
+
+    console.log('Monzo Total:', total);
 
     if (recipient) {
       const url = `https://monzo.me/${recipient}/${total}?d=${encodeURIComponent(reason)}`;
@@ -60,6 +67,7 @@
       console.error('Recipient not set');
     }
   };
+
 
 
 	const updateItem = (index: number, updatedItem: ReceiptItem) => {
