@@ -87,8 +87,11 @@ const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
  * Parse a receipt image using the /parse/ endpoint
  */
 export const parseReceipt = async (receipt: File): Promise<any> => {
+    alert("E")
     const formData = new FormData();
+    alert("F")
     formData.append('receipt', receipt);
+    alert("G")
 
     return await apiFetch('/parse/', {
         method: 'POST',
