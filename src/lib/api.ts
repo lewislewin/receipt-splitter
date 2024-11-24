@@ -67,9 +67,9 @@ const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
 
     try {
         alert("K")
-        alert(headers)
+        alert(headers.Authorization)
         alert(PUBLIC_API_BASE_URL)
-        alert(options)
+        alert(options.body)
         const response = await fetch(`${PUBLIC_API_BASE_URL}${endpoint}`, {
             ...options,
             headers,
