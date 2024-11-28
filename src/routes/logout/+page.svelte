@@ -4,7 +4,9 @@
 
     // Log the user out and redirect to the login page
     logout();
-    goto('/login');
+    $effect(() => {
+        goto('/login');
+    })
 </script>
 
 <p>Logging you out...</p>
