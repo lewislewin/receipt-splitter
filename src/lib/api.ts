@@ -20,12 +20,12 @@ const clearToken = (): void => {
 /**
  * Login function to authenticate and store the token
  */
-export const login = async (username: string, password: string): Promise<void> => {
+export const login = async (email: string, password: string): Promise<void> => {
 	try {
-		const response = await fetch(`${PUBLIC_API_BASE_URL}/api-token-auth/`, {
+		const response = await fetch(`${PUBLIC_API_BASE_URL}/login`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ username, password })
+			body: JSON.stringify({ email, password })
 		});
 
 		if (!response.ok) {
@@ -58,10 +58,10 @@ export const isAuthenticated = (): boolean => {
 /**
  * Helper function for API requests
  */
-const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
+export const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
 	const token = getToken();
 	const headers = {
-		...(token ? { Authorization: `Token ${token}` } : {}),
+		...(token ? { Authorization: `Bearer ${token}` } : {}),
 		...options.headers
 	};
 
@@ -92,7 +92,7 @@ export const parseReceipt = async (receipt: File): Promise<any> => {
       console.log('Base64 Encoded Receipt:', receiptBase64);
   
       // Send Base64 string to the API
-      return await apiFetch('/parse/', {
+      return await apiFetch('/receipts/parse', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -135,7 +135,7 @@ const fileToBase64 = (file: File): Promise<string> =>
  * Store a receipt using the /store/ endpoint
  */
 export const storeReceipt = async (receiptData: Record<string, any>): Promise<any> => {
-	return await apiFetch('/store/', {
+	return await apiFetch('/receipts', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify(receiptData)
@@ -146,7 +146,7 @@ export const storeReceipt = async (receiptData: Record<string, any>): Promise<an
  * Retrieve a stored receipt using the /retrieve/<id>/ endpoint
  */
 export const getReceipt = async (id: string): Promise<any> => {
-	return await apiFetch(`/retrieve/${id}/`, {
+	return await apiFetch(`/receipts/${id}`, {
 		method: 'GET'
 	});
 };

@@ -128,7 +128,7 @@
 			console.log('Receipt successfully stored, ID:', response.id);
 
 			// Redirect to the receipt details page
-			goto(`/receipts/${response.id}`);
+			goto(`/${response.id}`);
 		} catch (error: any) {
 			console.error('Error generating receipt link:', error.message);
 			alert(error.message || 'Failed to generate receipt link. Please try again.');
