@@ -79,6 +79,7 @@
     <div>
       {#each activeLines as line (line.item)}
         <ReceiptLine
+          zero={true}
           selectedItem={line}
           minimal
           on:removeLine={removeLine}

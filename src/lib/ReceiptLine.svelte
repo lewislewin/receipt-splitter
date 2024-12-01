@@ -4,6 +4,7 @@
 
   export let selectedItem: ReceiptItem;
   export let minimal = false;
+  export let zero = true;
 
   const dispatch = createEventDispatcher();
 
@@ -30,7 +31,11 @@
   let fractionalQty = 1; // Default to 1 (no split)
 
   const incrementQty = () => {
-    selectedItem.qty = parseFloat((selectedItem.qty + fractionalQty).toFixed(2));
+    if (selectedItem.qty === 0) {
+      selectedItem.qty = fractionalQty; // If qty is 0, set it to the fraction
+    } else {
+      selectedItem.qty = parseFloat((selectedItem.qty + fractionalQty).toFixed(2));
+    }
   };
 
   const decrementQty = () => {
@@ -39,13 +44,24 @@
 
   const updateFraction = (fraction: number) => {
     fractionalQty = fraction;
+    if (selectedItem.qty == 0) {
+      selectedItem.qty = fractionalQty
+    }
   };
 
   const calculateRowTotal = () => {
     return (selectedItem.price * selectedItem.qty).toFixed(2);
   };
 
+  function zeroItem() {
+    if (zero) {
+      selectedItem.qty = 0;
+    }
+  }
+
   const fractionalOptions = [1, 0.5, 0.25, 0.1]; // Example fractional splits
+
+  zeroItem();
 </script>
 
 <div class="p-4 bg-gray-100 rounded shadow mb-4">
