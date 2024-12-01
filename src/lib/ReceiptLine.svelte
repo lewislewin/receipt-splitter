@@ -4,7 +4,7 @@
 
   export let selectedItem: ReceiptItem;
   export let minimal = false;
-  export let zero = true;
+  export let zero = false;
 
   const dispatch = createEventDispatcher();
 

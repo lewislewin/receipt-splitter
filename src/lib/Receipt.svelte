@@ -69,6 +69,7 @@
   
     {#if selectedItem}
       <ReceiptLine
+        zero={true}
         {selectedItem}
         on:addLine={addLine}
         on:cancel={() => (selectedItem = null)}
@@ -79,7 +80,6 @@
     <div>
       {#each activeLines as line (line.item)}
         <ReceiptLine
-          zero={true}
           selectedItem={line}
           minimal
           on:removeLine={removeLine}
