@@ -4,6 +4,7 @@
     export let modifier: Modifier;
     export let index: number;
     export let editable: boolean;
+    export let itemsTotal: number; // Total of active items passed from parent
     export let onUpdate: (index: number, updatedModifier: Modifier) => void;
   
     const handleTypeChange = (e: Event) => {
@@ -24,6 +25,13 @@
     const handleIncludeChange = (e: Event) => {
       const target = e.target as HTMLInputElement;
       onUpdate(index, { ...modifier, include: target.checked });
+    };
+  
+    const calculateModifierTotal = () => {
+      if (modifier.percentage) {
+        return (itemsTotal * (modifier.percentage / 100)).toFixed(2);
+      }
+      return modifier.value?.toFixed(2) || '0.00';
     };
   </script>
   
@@ -62,7 +70,7 @@
     {:else}
       <span class="flex-grow">{modifier.type}</span>
       <span class="w-20 text-right">{modifier.percentage || 0}%</span>
-      <span class="w-20 text-right">£{modifier.value?.toFixed(2) || '0.00'}</span>
+      <span class="w-20 text-right">£{calculateModifierTotal()}</span>
     {/if}
   </div>
   {/if}

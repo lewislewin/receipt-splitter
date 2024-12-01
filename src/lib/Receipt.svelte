@@ -7,9 +7,9 @@
     let { receiptName = '', items = [], modifiers = [], canEdit = false } = $props();
   
     // State
-    let selectedItem: ReceiptItem | null = null;
-    let activeLines: ReceiptItem[] = [];
-    let activeModifiers: Modifier[] = modifiers;
+    let selectedItem: ReceiptItem | null = $state(null);
+    let activeLines: ReceiptItem[] = $state([]);
+    let activeModifiers: Modifier[] = $state(modifiers);
   
     const addLine = (event: CustomEvent<ReceiptItem>) => {
       const line = event.detail;
@@ -27,15 +27,17 @@
       activeModifiers = [...activeModifiers];
     };
   
+    const calculateItemsTotal = () => {
+      return activeLines.reduce((sum, item) => sum + (item.price || 0) * item.qty, 0);
+    };
+  
     const calculateTotal = () => {
-      const itemsTotal = activeLines.reduce(
-        (sum, item) => sum + (item.price || 0) * item.qty,
-        0
-      );
+      const itemsTotal = calculateItemsTotal();
   
       const modifiersTotal = activeModifiers.reduce((total, modifier) => {
+        if (!modifier.include && !canEdit) return total; // Exclude non-included modifiers when not editable
         if (modifier.percentage) {
-          return total * (1 + modifier.percentage / 100);
+          return total + itemsTotal * (modifier.percentage / 100);
         }
         if (modifier.value) {
           return total + modifier.value;
@@ -96,12 +98,15 @@
     <h3 class="text-lg font-bold mt-6 mb-2">Modifiers</h3>
     <div>
       {#each activeModifiers as modifier, index}
-        <ModifierComponent
-          {modifier}
-          {index}
-          editable={canEdit}
-          onUpdate={updateModifier}
-        />
+        {#if canEdit || modifier.include}
+          <ModifierComponent
+            {modifier}
+            {index}
+            editable={canEdit}
+            itemsTotal={calculateItemsTotal()}
+            onUpdate={updateModifier}
+          />
+        {/if}
       {/each}
     </div>
   
