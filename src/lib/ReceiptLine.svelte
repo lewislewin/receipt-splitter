@@ -27,19 +27,18 @@
     dispatch('removeLine', selectedItem);
   };
 
+  let fractionalQty = 1; // Default to 1 (no split)
+
   const incrementQty = () => {
-    selectedItem.qty++;
+    selectedItem.qty = parseFloat((selectedItem.qty + fractionalQty).toFixed(2));
   };
 
   const decrementQty = () => {
-    selectedItem.qty = Math.max(selectedItem.qty - 1, 0);
+    selectedItem.qty = parseFloat(Math.max(selectedItem.qty - fractionalQty, 0).toFixed(2));
   };
-
-  let fractionalQty = 1; // Default to 1 (no split)
 
   const updateFraction = (fraction: number) => {
     fractionalQty = fraction;
-    selectedItem.qty = fractionalQty;
   };
 
   const calculateRowTotal = () => {
@@ -50,6 +49,7 @@
 </script>
 
 <div class="p-4 bg-gray-100 rounded shadow mb-4">
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
   {#if minimal}
     <!-- Minimal View -->
     <!-- svelte-ignore a11y_click_events_have_key_events -->
