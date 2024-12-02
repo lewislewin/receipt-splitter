@@ -82,12 +82,12 @@
 			<div class="mb-2 flex items-center justify-between">
 				<input
 					type="text"
-					class="w-half rounded border p-2 font-semibold"
+					class="w-full rounded border p-2 font-semibold"
 					bind:value={selectedItem.item}
 				/>
         <input
 					type="number"
-					class="w-half rounded border p-2 font-semibold"
+					class="w-full rounded border p-2 font-semibold"
 					bind:value={selectedItem.price}
 				/>
 			</div>
