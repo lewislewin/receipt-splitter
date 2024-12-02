@@ -87,8 +87,8 @@
 	}
 
 	const pay = () => {
-    // Calculate total as a rounded number to two decimal places
-    const rawTotal = Math.round(calculateTotal() * 100) / 100;
+    // Calculate total as a rounded number down to the nearest 0.05
+    const rawTotal = Math.floor(calculateTotal() * 20) / 20; // Multiply by 20, floor it, then divide back
     // Format the total to always have exactly two decimal places
     const total = rawTotal.toLocaleString('en-US', {
       minimumFractionDigits: 2,
@@ -98,17 +98,18 @@
     const recipient = monzo_id;
     const paymentReason = reason || 'Payment';
 
-    console.log('Monzo Total:', total);
+    console.log('Monzo Total (rounded to nearest 0.05):', total);
 
     if (recipient) {
       const url = `https://monzo.me/${recipient}/${encodeURIComponent(total)}?d=${encodeURIComponent(paymentReason)}`;
-      // Open the URL in a new tab
-      window.open(url, '_blank');
+      // Redirect in the same tab
+      window.location.href = url;
     } else {
       console.error('Recipient not set');
       alert('Monzo ID is required for payment.');
     }
   };
+
 
 
 
