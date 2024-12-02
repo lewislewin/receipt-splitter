@@ -55,7 +55,7 @@
 
 	function zeroItem() {
 		if (zero) {
-			selectedItem.qty = 0;
+			selectedItem.qty = 1;
 		}
 	}
 
