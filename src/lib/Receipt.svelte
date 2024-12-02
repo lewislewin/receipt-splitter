@@ -87,22 +87,22 @@
 	}
 
 	const pay = () => {
-		const total = calculateTotal().toFixed(2).toString(); // Ensure consistent formatting
-    const splitTotal = total.split('.')
-    const finalTotal = splitTotal[0] + '.' + splitTotal[1].slice(0, 2)
-		const recipient = monzo_id;
-		const paymentReason = reason || 'Payment';
+    // Ensure total is rounded to two decimal places using Math.round
+    const total = (Math.round(calculateTotal() * 100) / 100).toFixed(2);
+    const recipient = monzo_id;
+    const paymentReason = reason || 'Payment';
 
-		console.log('Monzo Total:', finalTotal);
+    console.log('Monzo Total:', total);
 
-		if (recipient) {
-			const url = `https://monzo.me/${recipient}/${finalTotal}?d=${encodeURIComponent(paymentReason)}`;
-			window.location.href = url;
-		} else {
-			console.error('Recipient not set');
-			alert('Monzo ID is required for payment.');
-		}
-	};
+    if (recipient) {
+      const url = `https://monzo.me/${recipient}/${total}?d=${encodeURIComponent(paymentReason)}`;
+      window.location.href = url;
+    } else {
+      console.error('Recipient not set');
+      alert('Monzo ID is required for payment.');
+    }
+  };
+
 
 	if (canEdit) {
 		items.forEach((item) => {
