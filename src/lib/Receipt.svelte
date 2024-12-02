@@ -102,7 +102,7 @@
 
     if (recipient) {
       alert(`${total}`);
-      const url = `https://monzo.me/${recipient}/${total}?d=${encodeURIComponent(paymentReason)}`;
+      const url = `https://monzo.me/${recipient}/${encodeURIComponent(total)}?d=${encodeURIComponent(paymentReason)}`;
       window.location.href = url;
     } else {
       console.error('Recipient not set');
