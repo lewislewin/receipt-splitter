@@ -83,6 +83,7 @@
 				items={receipt.items}
 				modifiers={receipt.modifiers}
 				canEdit={true}
+				
 			/>
 		</div>
 	{/if}

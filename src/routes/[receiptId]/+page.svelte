@@ -59,6 +59,8 @@
         items={receipt.items}
         modifiers={receipt.modifiers}
         canEdit={false}
+        monzo_id={receipt.monzo_id}
+        reason={receipt.reason}
       />
     </div>
   {:else}
