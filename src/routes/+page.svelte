@@ -2,6 +2,7 @@
 	import { parseReceipt } from '$lib/api';
 	import type { ParsedReceipt } from '$lib/types';
 	import ReceiptWrapper from '$lib/receipt/ReceiptWrapper.svelte';
+	import Receipt from '$lib/Receipt.svelte';
 
 	let receipt: ParsedReceipt | null = null;
 	let loading: boolean = false; // Loading state
@@ -77,7 +78,12 @@
 	<!-- Parsed Receipt -->
 	{#if receipt}
 		<div class="w-full bg-white p-4 rounded-md shadow">
-			<ReceiptWrapper {receipt} canEdit={true} />
+			<Receipt
+				receiptName={receipt.name}
+				items={receipt.items}
+				modifiers={receipt.modifiers}
+				canEdit={true}
+			/>
 		</div>
 	{/if}
 </div>

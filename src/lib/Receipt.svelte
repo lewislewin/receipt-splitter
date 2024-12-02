@@ -48,6 +48,13 @@
     const pay = () => {
       alert(`Paying £${calculateTotal().toFixed(2)}`);
     };
+
+    if (canEdit) {
+      items.forEach(item => {
+        activeLines.push(item)
+        
+      });
+    }
   </script>
   
   <div class="flex flex-col p-4 bg-white rounded shadow">
