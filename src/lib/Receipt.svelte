@@ -87,14 +87,16 @@
 	}
 
 	const pay = () => {
-		const total = calculateTotal().toFixed(2); // Ensure consistent formatting
+		const total = calculateTotal().toFixed(2).toString(); // Ensure consistent formatting
+    const splitTotal = total.split('.')
+    const finalTotal = splitTotal[0] + '.' + splitTotal[1].slice(0, 2)
 		const recipient = monzo_id;
 		const paymentReason = reason || 'Payment';
 
-		console.log('Monzo Total:', total);
+		console.log('Monzo Total:', finalTotal);
 
 		if (recipient) {
-			const url = `https://monzo.me/${recipient}/${total}?d=${encodeURIComponent(paymentReason)}`;
+			const url = `https://monzo.me/${recipient}/${finalTotal}?d=${encodeURIComponent(paymentReason)}`;
 			window.location.href = url;
 		} else {
 			console.error('Recipient not set');
