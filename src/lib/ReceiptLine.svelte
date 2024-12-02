@@ -105,7 +105,7 @@
 				>
 					{#each fractionalOptions as option}
 						<option value={option}>
-							{option === 1 ? 'Full' : `${option * 100}%`}
+							{option === 1 ? '100%' : `${option * 100}%`}
 						</option>
 					{/each}
 				</select>
