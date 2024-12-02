@@ -101,14 +101,15 @@
     console.log('Monzo Total:', total);
 
     if (recipient) {
-      alert(`${total}`);
       const url = `https://monzo.me/${recipient}/${encodeURIComponent(total)}?d=${encodeURIComponent(paymentReason)}`;
-      window.location.href = url;
+      // Open the URL in a new tab
+      window.open(url, '_blank');
     } else {
       console.error('Recipient not set');
       alert('Monzo ID is required for payment.');
     }
   };
+
 
 
 
