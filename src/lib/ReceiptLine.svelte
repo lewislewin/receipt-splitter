@@ -72,6 +72,7 @@
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div class="flex cursor-pointer items-center justify-between" onclick={toggleEdit}>
 			<span>{selectedItem.item}</span>
+			<span>{selectedItem.qty}</span>
 			<span>£{(selectedItem.price * selectedItem.qty).toFixed(2)}</span>
 			<button class="rounded bg-red-500 px-2 py-1 text-white" onclick={removeLine}> Remove </button>
 		</div>
