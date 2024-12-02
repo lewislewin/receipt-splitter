@@ -87,8 +87,14 @@
 	}
 
 	const pay = () => {
-    // Ensure total is rounded to two decimal places using Math.round
-    const total = (Math.round(calculateTotal() * 100) / 100).toFixed(2);
+    // Calculate total as a rounded number to two decimal places
+    const rawTotal = Math.round(calculateTotal() * 100) / 100;
+    // Format the total to always have exactly two decimal places
+    const total = rawTotal.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+
     const recipient = monzo_id;
     const paymentReason = reason || 'Payment';
 
@@ -102,6 +108,7 @@
       alert('Monzo ID is required for payment.');
     }
   };
+
 
 
 	if (canEdit) {
