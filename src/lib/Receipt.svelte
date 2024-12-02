@@ -101,6 +101,7 @@
     console.log('Monzo Total:', total);
 
     if (recipient) {
+      alert(`${total}`);
       const url = `https://monzo.me/${recipient}/${total}?d=${encodeURIComponent(paymentReason)}`;
       window.location.href = url;
     } else {
