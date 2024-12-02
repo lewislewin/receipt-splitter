@@ -44,7 +44,7 @@
 
 	const updateFraction = (fraction: number) => {
 		fractionalQty = fraction;
-		if (selectedItem.qty == 0) {
+		if (selectedItem.qty <= 1) {
 			selectedItem.qty = fractionalQty;
 		}
 	};
