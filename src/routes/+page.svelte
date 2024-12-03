@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { parseReceipt } from '$lib/api';
 	import type { ParsedReceipt } from '$lib/types';
-	import ReceiptWrapper from '$lib/receipt/ReceiptWrapper.svelte';
 	import Receipt from '$lib/Receipt.svelte';
 
 	let receipt: ParsedReceipt | null = null;
