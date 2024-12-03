@@ -68,7 +68,8 @@
 				items: activeLines,
 				modifiers: activeModifiers,
 				reason,
-				monzo_id
+				monzo_id,
+				id: undefined
 			};
 
 			console.log('Storing receipt on the server:', receipt);
