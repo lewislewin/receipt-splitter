@@ -51,7 +51,7 @@
 	<div class="flex items-center gap-4">
 		<a href="/user" class="hover:underline">Current User</a>
 		<button 
-			on:click={handleLogout} 
+			onclick={handleLogout} 
 			class="bg-white text-blue-500 px-4 py-2 rounded hover:bg-gray-200"
 		>
 			Logout
