@@ -35,7 +35,7 @@ export const login = async (email: string, password: string): Promise<void> => {
 
 		const { token } = await response.json();
 		setToken(token); // Store the token in local storage
-	} catch (err: any) {
+	} catch (err: unknown) {
 		console.error('Login Error:', err.message);
 		throw err;
 	}
