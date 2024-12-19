@@ -1,56 +1,88 @@
 <script lang="ts">
-    import { goto } from '$app/navigation';
-    import { login, isAuthenticated, logout } from '$lib/api';
-    let username = '';
-    let password = '';
-    let error: string | null = null;
+	import { goto } from '$app/navigation';
+	import { loginUser, logoutUser, auth } from '$lib/auth.svelte';
+	import { get } from 'svelte/store';
 
-    const handleLogin = async () => {
-        try {
-            await login(username, password);
-            error = null;
-            goto('/'); // Redirect to the home page or dashboard
-        } catch (err: any) {
-            error = err.message || 'Login failed. Please try again.';
-        }
-    };
+	let email = '';
+	let password = '';
+	let error: string | null = null;
 
-    const handleLogout = () => {
-        logout();
-        goto('/login'); // Redirect to the login page
-    };
+	const handleLogin = async () => {
+		error = null;
+
+		// Validate form fields
+		if (!email || !password) {
+			error = 'Both email and password are required.';
+			return;
+		}
+
+		try {
+			await loginUser(email, password);
+			error = null; // Clear error on successful login
+			goto('/'); // Redirect to the home page
+		} catch (err: any) {
+			error = err.message || 'Login failed. Please try again.';
+		}
+	};
+
+	const handleLogout = () => {
+		logoutUser();
+		goto('/login'); // Redirect to the login page
+	};
+
+	$: isAuthenticated = get(auth).isAuthenticated;
 </script>
 
-{#if isAuthenticated()}
-    <p>You are logged in!</p>
-    <button on:click={handleLogout} class="btn">Logout</button>
-{:else}
-    <div class="login-form">
-        <h1>Login</h1>
-        <input type="text" placeholder="Username" bind:value={username} />
-        <input type="password" placeholder="Password" bind:value={password} />
-        <button on:click={handleLogin} class="btn">Login</button>
-        {#if error}
-            <p class="error">{error}</p>
-        {/if}
-    </div>
-{/if}
+<div class="flex items-center justify-center min-h-screen bg-gray-100">
+	<div class="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
+		{#if isAuthenticated}
+			<h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">You are logged in!</h1>
+			<button 
+				on:click={handleLogout} 
+				class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors"
+			>
+				Logout
+			</button>
+		{:else}
+			<h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Login</h1>
+
+			<div class="space-y-4">
+				<input
+					type="email"
+					placeholder="Email"
+					bind:value={email}
+					class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+				/>
+				<input
+					type="password"
+					placeholder="Password"
+					bind:value={password}
+					class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+				/>
+			</div>
+
+			{#if error}
+				<p class="mt-4 text-red-500 text-sm">{error}</p>
+			{/if}
+
+			<button
+				on:click={handleLogin}
+				class="w-full mt-6 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors"
+			>
+				Login
+			</button>
+            <button
+				on:click={() => goto('/register')}
+				class="w-full mt-6 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors"
+			>
+				Register
+			</button>
+		{/if}
+	</div>
+</div>
 
 <style>
-    .btn {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        cursor: pointer;
-        border-radius: 5px;
-    }
-
-    .btn:hover {
-        background-color: #0056b3;
-    }
-
-    .error {
-        color: red;
-    }
+	:global(body) {
+		@apply bg-gray-100;
+	}
 </style>

@@ -32,12 +32,9 @@
 			return;
 		}
 
-		console.log('Selected File:', receiptImage); // Log file details for debugging
-
 		try {
 			loading = true; // Set loading to true while processing
 			receipt = await parseReceipt(receiptImage);
-			console.log('Returned Receipt: ', receipt);
 		} catch (error: any) {
 			alert(error.message || 'Failed to parse the receipt. Please try again.');
 		} finally {
