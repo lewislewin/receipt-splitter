@@ -7,6 +7,9 @@
 
 	let { children } = $props();
 
+	// Regular expression to match UUIDs
+	const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 	onMount(async () => {
 		await initializeAuth();
 
@@ -17,8 +20,14 @@
 		const publicRoutes = ['/login', '/register'];
 		const currentPath = window.location.pathname;
 
-		const isPublicRoute = publicRoutes.some((route) => currentPath.startsWith(route));
+		// Check if the current route is a UUID
+		const pathSegments = currentPath.split('/').filter(Boolean); // Split and remove empty segments
+		const hasUuid = pathSegments.some((segment) => uuidRegex.test(segment));
 
+		// Determine if the route is public
+		const isPublicRoute = publicRoutes.some((route) => currentPath.startsWith(route)) || hasUuid;
+
+		// Redirect to /login if not authenticated and the route is private
 		if (!authState.isAuthenticated && !isPublicRoute) {
 			console.log('Redirecting to /login');
 			goto('/login');
