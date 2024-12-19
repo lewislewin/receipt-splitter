@@ -68,17 +68,16 @@
 				items: activeLines,
 				modifiers: activeModifiers,
 				reason,
-				monzo_id
+				monzo_id,
+				id: undefined
 			};
 
 			console.log('Storing receipt on the server:', receipt);
 
-			// Use the storeReceipt helper to send the receipt to the backend
 			const response = await storeReceipt(receipt);
 
 			console.log('Receipt successfully stored, ID:', response.id);
 
-			// Redirect to the receipt details page
 			goto(`/${response.id}`);
 		} catch (error: any) {
 			console.error('Error generating receipt link:', error.message);
@@ -87,9 +86,7 @@
 	}
 
 	const pay = () => {
-    // Calculate total as a rounded number down to the nearest 0.05
-    const rawTotal = Math.floor(calculateTotal() * 20) / 20; // Multiply by 20, floor it, then divide back
-    // Format the total to always have exactly two decimal places
+    const rawTotal = Math.floor(calculateTotal() * 20) / 20;
     const total = rawTotal.toLocaleString('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
@@ -102,7 +99,7 @@
 
     if (recipient) {
       const url = `https://monzo.me/${recipient}/${encodeURIComponent(total)}?d=${encodeURIComponent(paymentReason)}`;
-      // Redirect in the same tab
+	  
       window.location.href = url;
     } else {
       console.error('Recipient not set');

@@ -1,9 +1,9 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
-    import { logout } from '$lib/api';
+    import { logoutUser } from '$lib/auth.svelte';
 
-    // Log the user out and redirect to the login page
-    logout();
+    logoutUser();
+
     $effect(() => {
         goto('/login');
     })

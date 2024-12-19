@@ -1,11 +1,16 @@
 import { PUBLIC_API_BASE_URL } from '$env/static/public';
 import imageCompression from 'browser-image-compression';
-
+import { get } from 'svelte/store';
+import { auth } from './auth.svelte';
 // Helper function to check if the code is running on the client side
 const isClient = typeof window !== 'undefined';
 
 // Helper functions for token management
-const getToken = (): string | null => (isClient ? localStorage.getItem('authToken') : null);
+const getToken = (): string | null => {
+	const authState = get(auth);
+	return authState.token;
+};
+
 const setToken = (token: string): void => {
 	if (isClient) {
 		localStorage.setItem('authToken', token);
@@ -35,7 +40,7 @@ export const login = async (email: string, password: string): Promise<void> => {
 
 		const { token } = await response.json();
 		setToken(token); // Store the token in local storage
-	} catch (err: any) {
+	} catch (err: unknown) {
 		console.error('Login Error:', err.message);
 		throw err;
 	}

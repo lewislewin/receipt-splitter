@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { getReceipt } from '$lib/api'; // Import your API helper
+  import { getReceipt } from '$lib/api';
   import type { ParsedReceipt } from '$lib/types';
   import { onMount } from 'svelte';
-  import { page } from '$app/stores'; // Access URL and route details from SvelteKit
+  import { page } from '$app/stores';
 	import Receipt from '$lib/Receipt.svelte';
 
   let receipt: ParsedReceipt | null = null;
@@ -12,18 +12,17 @@
 
   onMount(async () => {
     try {
-      // Extract ID from the URL
       const currentPage = $page;
-      const id = currentPage.url.pathname.split('/').pop(); // Extract the last segment of the URL
+      const id = currentPage.url.pathname.split('/').pop();
 
       if (!id) {
         throw new Error('No receipt ID found in the URL.');
       }
 
       console.log('Fetching receipt with ID:', id);
-      receipt = await getReceipt(id); // Use the API helper to fetch receipt data
+      receipt = await getReceipt(id);
       console.log('Fetched receipt:', receipt);
-      calculateTotal(); // Calculate the total
+      calculateTotal();
     } catch (err: any) {
       console.error('Error fetching receipt:', err.message);
       error = err.message || 'Failed to load receipt. Please try again.';
