@@ -1,7 +1,6 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
-    import { apiFetch } from '$lib/api'; // Use apiFetch for authenticated requests
-    import { onMount } from 'svelte';
+    import { apiFetch } from '$lib/api';
 
     let name = '';
     let email = '';
@@ -12,22 +11,20 @@
     const handleRegister = async () => {
         error = null;
 
-        // Validate form fields
         if (!name || !email || !password || !monzoId) {
             error = 'All fields are required.';
             return;
         }
 
         try {
-            // Make API call to register the user
             await apiFetch('/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, email, password, monzo_id: monzoId })
             });
 
-            error = null; // Clear any previous errors
-            goto('/login'); // Redirect to login on successful registration
+            error = null; 
+            goto('/login');
         } catch (err: any) {
             error = err.message || 'Registration failed. Please try again.';
         }

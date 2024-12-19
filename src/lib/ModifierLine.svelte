@@ -4,7 +4,7 @@
     export let modifier: Modifier;
     export let index: number;
     export let editable: boolean;
-    export let itemsTotal: number; // Total of active items passed from parent
+    export let itemsTotal: number;
     export let onUpdate: (index: number, updatedModifier: Modifier) => void;
   
     const handleTypeChange = (e: Event) => {

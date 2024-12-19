@@ -4,41 +4,36 @@
 	import Receipt from '$lib/Receipt.svelte';
 
 	let receipt: ParsedReceipt | null = null;
-	let loading: boolean = false; // Loading state
+	let loading: boolean = false;
 
-	// Allowed file types
 	const allowedFileTypes = ['image/jpeg', 'image/png'];
 
-	// Handle receipt parsing
 	const handleParseReceipt = async (event: Event) => {
 		const input = event.target as HTMLInputElement;
 
-		// Check if files are selected
 		if (!input.files || input.files.length === 0) {
 			alert('Please select a receipt image!');
 			return;
 		}
 
-		// Validate file type
 		const receiptImage = input.files[0];
 		if (!allowedFileTypes.includes(receiptImage.type)) {
 			alert('Unsupported file type. Please upload a JPEG or PNG image.');
 			return;
 		}
 
-		// Ensure file is not empty
 		if (receiptImage.size === 0) {
 			alert('The selected file is empty. Please try again.');
 			return;
 		}
 
 		try {
-			loading = true; // Set loading to true while processing
+			loading = true;
 			receipt = await parseReceipt(receiptImage);
 		} catch (error: any) {
 			alert(error.message || 'Failed to parse the receipt. Please try again.');
 		} finally {
-			loading = false; // Stop loading after processing
+			loading = false;
 		}
 	};
 </script>

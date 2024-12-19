@@ -10,29 +10,29 @@
 
 	const toggleEdit = () => {
 		if (minimal) {
-			minimal = false; // Only toggle if currently minimal
+			minimal = false;
 		}
 	};
 
 	const addLine = () => {
 		dispatch('addLine', selectedItem);
-		minimal = true; // Collapse back to minimal view after adding
+		minimal = true;
 	};
 
 	const cancel = () => {
 		dispatch('cancel');
-		minimal = true; // Collapse back to minimal view after canceling
+		minimal = true;
 	};
 
 	const removeLine = () => {
 		dispatch('removeLine', selectedItem);
 	};
 
-	let fractionalQty = 1; // Default to 1 (no split)
+	let fractionalQty = 1;
 
 	const incrementQty = () => {
 		if (selectedItem.qty === 0) {
-			selectedItem.qty = fractionalQty; // If qty is 0, set it to the fraction
+			selectedItem.qty = fractionalQty;
 		} else {
 			selectedItem.qty = parseFloat((selectedItem.qty + fractionalQty).toFixed(2));
 		}
@@ -59,7 +59,7 @@
 		}
 	}
 
-	const fractionalOptions = [1, 0.5, 0.25, 0.1]; // Example fractional splits
+	const fractionalOptions = [1, 0.5, 0.25, 0.1];
 
 	zeroItem();
 </script>

@@ -10,7 +10,6 @@
 	const handleLogin = async () => {
 		error = null;
 
-		// Validate form fields
 		if (!email || !password) {
 			error = 'Both email and password are required.';
 			return;
@@ -18,8 +17,8 @@
 
 		try {
 			await loginUser(email, password);
-			error = null; // Clear error on successful login
-			goto('/'); // Redirect to the home page
+			error = null;
+			goto('/');
 		} catch (err: any) {
 			error = err.message || 'Login failed. Please try again.';
 		}
@@ -27,7 +26,7 @@
 
 	const handleLogout = () => {
 		logoutUser();
-		goto('/login'); // Redirect to the login page
+		goto('/login');
 	};
 
 	$: isAuthenticated = get(auth).isAuthenticated;

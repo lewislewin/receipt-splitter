@@ -8,21 +8,17 @@
 	let { children } = $props();
 
 	onMount(async () => {
-		// Initialize the authentication state
 		await initializeAuth();
 
 		const authState = get(auth);
 
 		console.log('Auth State in onMount:', authState);
 
-		// Define public routes
 		const publicRoutes = ['/login', '/register'];
 		const currentPath = window.location.pathname;
 
-		// Check if the current route is public
 		const isPublicRoute = publicRoutes.some((route) => currentPath.startsWith(route));
 
-		// Redirect to /login if not authenticated and the route is private
 		if (!authState.isAuthenticated && !isPublicRoute) {
 			console.log('Redirecting to /login');
 			goto('/login');
